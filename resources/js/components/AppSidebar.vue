@@ -23,11 +23,11 @@ const mainNavItems: NavItem[] = [
                     <SidebarMenuItem>
                         <Link href="dashboard">
                         <div class="flex gap-2">
-                            <div class="flex aspect-square size-9 items-center justify-center rounded-md mt-3">
+                            <!-- <div class="flex aspect-square size-9 items-center justify-center rounded-md mt-3">
                                 <img class="w-14" src="/assets/images/fabicon.png" alt="icon">
-                            </div>
+                            </div> -->
                             <div class="grid flex-1 text-left text-sm mt-4">
-                                <img class="w-28" src="/assets/images/logo2.png" alt="">
+                                <img class="w-28" src="/assets/images/logo.png" alt="">
                             </div>
                         </div>
                         </Link>

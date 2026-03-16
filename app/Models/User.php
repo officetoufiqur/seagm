@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -19,29 +20,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
+        'email_verified_at',
+        'mobile',
+        'mobile_verified_at',
         'password',
-        'number',
-        'otp',
-        'age',
-        'location',
-        'gender',
-        'languages',
-        'canDrive',
-        'education',
-        'idCopy',
-        'profilePhoto',
-        'drivingLicense',
-        'goodConductCertificate',
-        'referenceLetter',
-        'hospitalBasedCare',
-        'hospitalBasedYearsOfExperience',
-        'hospitalBasedReferenceContact',
-        'homeBasedCare',
-        'homeBasedYearsOfExperience',
-        'homeBasedReferenceContact',
-        'preferred',
+        'mobile_verified_code',
+        'email_verified_code',
+        'role'
     ];
 
     /**
@@ -50,10 +36,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
-        'remember_token',
+        'password'
     ];
 
     /**

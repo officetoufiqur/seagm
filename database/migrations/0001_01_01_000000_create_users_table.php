@@ -13,30 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('mobile')->nullable()->unique();
+            $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->integer('number')->unique();
-            $table->integer('otp')->nullable();
-            $table->integer('age')->nullable();
-            $table->string('location')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('languages')->nullable();
-            $table->boolean('canDrive')->default(false);
-            $table->string('education')->nullable();
-            $table->string('idCopy')->nullable();
-            $table->string('profilePhoto')->nullable();
-            $table->string('drivingLicense')->nullable();
-            $table->string('goodConductCertificate')->nullable();
-            $table->string('referenceLetter')->nullable();
-            $table->boolean('hospitalBasedCare')->default(false);
-            $table->integer('hospitalBasedYearsOfExperience')->nullable();
-            $table->string('hospitalBasedReferenceContact')->nullable();
-            $table->boolean('homeBasedCare')->default(false);
-            $table->integer('homeBasedYearsOfExperience')->nullable();
-            $table->string('homeBasedReferenceContact')->nullable();
-            $table->string('preferred')->nullable();
+            $table->timestamp('mobile_verified_at')->nullable();
+            $table->char('mobile_verified_code', 6)->nullable();
+            $table->char('email_verified_code', 6)->nullable();
+            $table->string('password')->nullable();
+            $table->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
