@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Stripe\Stripe;
-// use Stripe\Webhook;
 // use App\Models\User;
 // use App\Models\Invoice;
 // use App\Models\Package;
-// use Stripe\PaymentIntent;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
@@ -31,7 +29,7 @@ class StripePaymentController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'USD',
+                    'currency' => 'usd',
                     'product_data' => [
                         'name' => 'Test Product',
                     ],

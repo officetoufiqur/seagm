@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 // use App\Models\Invoice;
 // use App\Models\Package;
 // use App\Models\User;
-// use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -35,7 +34,7 @@ class StripeWebhookController extends Controller
             $session = $event->data->object;
 
             $payment = Payment::where(
-                'stripe_session_id',
+                'transaction_id',
                 $session->id
             )->first();
 
@@ -56,18 +55,6 @@ class StripeWebhookController extends Controller
                     'status' => 'completed',
                     'payment_method' => 'stripe',
                 ]);
-
-                // $expireDate = now()->addDays($package->duration_days);
-
-                // if ($user->vip_expires_at && $user->vip_expires_at > now()) {
-                //     $expireDate = Carbon::parse($user->vip_expires_at)
-                //         ->addDays($package->duration_days);
-                // }
-
-                // $user->update([
-                //     'membership_type' => 'vip',
-                //     'vip_expires_at' => $expireDate,
-                // ]);
 
                 // $invoiceNumber = GenerateNumber::generate('INV', Invoice::class);
 

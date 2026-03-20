@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2)->default(0.00);
             $table->string('payment_method')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->string('poll_url')->nullable();
             $table->timestamps();
         });
     }

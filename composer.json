@@ -16,6 +16,7 @@
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "paynow/php-sdk": "*",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^19.4"
     },

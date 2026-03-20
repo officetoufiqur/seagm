@@ -41,4 +41,9 @@ return [
         'webhook' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'paynow' => [
+        'id' => env('PAYNOW_ID'),
+        'key' => env('PAYNOW_KEY'),
+    ],
+
 ];
