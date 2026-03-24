@@ -18,5 +18,6 @@ Route::get('dashboard', function () {
 Route::get('paypal/payment/success', [PaypalController::class, 'paymentSuccess'])->name('paypal.payment.success');
 Route::get('paypal/payment/cancel', [PaypalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
 
+
 require __DIR__.'/settings.php';
 require __DIR__.'/command.php';

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SeagmHelper;
 use App\Models\Payment;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,25 @@ class PaypalController extends Controller
     
     public function payment(Request $request)
     {
+        $request->validate([
+            'card_id' => 'required',
+            'id' => 'required',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $data = SeagmHelper::get("v1/card-categories/{$request->card_id}/card-types");
+
+        $res = collect($data['data'])->firstWhere('id', $request->id);
+
+        if (! $res) {
+            return response()->json([
+                'error' => 'Card type not found',
+            ], 400);
+        }
+
+        $unitAmount = (int) ($res['unit_price'] * 100);
+        $quantity = $request->quantity;
+        
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $provider->getAccessToken();
@@ -27,8 +47,8 @@ class PaypalController extends Controller
             "purchase_units" => [
                 [
                     "amount" => [
-                        "currency_code" => "USD",
-                        "value" => "100.00"
+                        "currency_code" => strtolower($res['currency']),
+                        "value" => $unitAmount
                     ]
                 ]
             ]

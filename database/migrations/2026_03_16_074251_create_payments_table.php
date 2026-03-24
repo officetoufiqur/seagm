@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->decimal('amount', 10, 2)->default(0.00);
             $table->string('payment_method')->nullable();
+            $table->string('currency')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->string('poll_url')->nullable();
             $table->timestamps();

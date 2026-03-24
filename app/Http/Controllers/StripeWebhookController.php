@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-// use App\Helpers\GenerateNumber;
-// use App\Models\Invoice;
-// use App\Models\Package;
-// use App\Models\User;
-use Carbon\Carbon;
+use App\Helpers\SeagmHelper;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Stripe\Webhook;
 
 class StripeWebhookController extends Controller
@@ -33,42 +30,38 @@ class StripeWebhookController extends Controller
 
             $session = $event->data->object;
 
-            $payment = Payment::where(
-                'transaction_id',
-                $session->id
-            )->first();
+            DB::transaction(function () use ($session) {
 
-            if (! $payment || $payment->status === 'completed') {
-                return response()->json(['received' => true]);
-            }
+                $payment = Payment::where('transaction_id', $session->id)->lockForUpdate()->first();
 
-            // $user = User::find($session->metadata->user_id);
-            // $package = Package::find($session->metadata->package_id);
+                if (! $payment || $payment->status === 'completed') {
+                    return;
+                }
 
-            // if (! $user || ! $package) {
-            //     return response()->json(['error' => 'Invalid metadata'], 400);
-            // }
+                $stripeAmount = $session->amount_total / 100;
 
-            DB::transaction(function () use ($payment) {
+                if ((float) $payment->amount !== (float) $stripeAmount) {
+                    throw new \Exception('Amount mismatch');
+                }
 
                 $payment->update([
                     'status' => 'completed',
-                    'payment_method' => 'stripe',
                 ]);
 
-                // $invoiceNumber = GenerateNumber::generate('INV', Invoice::class);
+                $metadata = $session->metadata;
 
-                // Invoice::create([
-                //     'user_id' => $user->id,
-                //     'payment_id' => $payment->id,
-                //     'package_id' => $package->id,
-                //     'invoice_number' => $invoiceNumber,
-                //     'invoice_date' => now(),
-                //     'description' => $package->description,
-                //     'total_amount' => $package->price,
-                //     'paid_amount' => $package->price,
-                //     'remaining_amount' => 0
-                // ]);
+                try {
+                    $order = SeagmHelper::post('v1/card-orders', [
+                        'type_id' => $metadata->type_id,
+                        'buy_amount' => $metadata->quantity ?? 1,
+                        'mch_order_id' => $payment->transaction_id,
+                    ]);
+
+                } catch (\Exception $e) {
+                    Log::error('SEAGM Order Failed: '.$e->getMessage());
+                    $payment->update(['status' => 'failed']);
+                }
+
             });
         }
 

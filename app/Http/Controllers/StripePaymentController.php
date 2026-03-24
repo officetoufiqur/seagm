@@ -2,44 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Stripe\Stripe;
-// use App\Models\User;
-// use App\Models\Invoice;
-// use App\Models\Package;
+use App\Helpers\SeagmHelper;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class StripePaymentController extends Controller
 {
     public function checkout(Request $request)
     {
-        // $request->validate([
-        //     'package_id' => 'required|exists:packages,id',
-        // ]);
+        $request->validate([
+            'card_id' => 'required',
+            'id' => 'required',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-        // $package = Package::findOrFail($request->package_id);
- 
+        $data = SeagmHelper::get("v1/card-categories/{$request->card_id}/card-types");
+
+        $res = collect($data['data'])->firstWhere('id', $request->id);
+
+        if (! $res) {
+            return response()->json([
+                'error' => 'Card type not found',
+            ], 400);
+        }
+
         Stripe::setApiKey(config('services.stripe.secret'));
+
+        $unitAmount = (int) ($res['unit_price'] * 100);
+        $quantity = $request->quantity;
+        $total = $res['unit_price'] * $quantity;
 
         $session = Session::create([
             'mode' => 'payment',
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'usd',
+                    'currency' => strtolower($res['currency']),
                     'product_data' => [
-                        'name' => 'Test Product',
+                        'name' => $res['name'],
                     ],
-                    'unit_amount' => '100',
+                    'unit_amount' => $unitAmount,
                 ],
-                'quantity' => 1,
+                'quantity' => $quantity,
             ]],
             'metadata' => [
                 'user_id' => Auth::id(),
-                // 'package_id' => $package->id,
+                'card_id' => $request->card_id,
+                'type_id' => $request->id,
+                'quantity' => $quantity,
             ],
             'success_url' => config('app.url').'/payment-success',
             'cancel_url' => config('app.url').'/payment-cancel',
@@ -48,7 +61,8 @@ class StripePaymentController extends Controller
         Payment::create([
             'transaction_id' => $session->id,
             'user_id' => Auth::id(),
-            'amount' => '100',
+            'amount' => $total,
+            'currency' => $res['currency'],
             'payment_method' => 'stripe',
             'status' => 'pending',
         ]);
@@ -57,6 +71,4 @@ class StripePaymentController extends Controller
             'url' => $session->url,
         ]);
     }
-
-    
 }

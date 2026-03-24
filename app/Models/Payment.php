@@ -16,6 +16,7 @@ class Payment extends Model
         'payment_method',
         'payment_status',
         'poll_url',
+        'currency',
     ];
 
     public function user()
