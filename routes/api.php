@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 });
 
 Route::get('/banners', [BannerController::class, 'banners']);
+Route::get('/promotions', [PromotionController::class, 'promotions']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
 Route::post('/paynow/callback', [PaynowController::class, 'callback']);

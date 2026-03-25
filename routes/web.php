@@ -3,6 +3,7 @@
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -32,6 +33,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/banners/{banner}', 'update')->name('banners.update');
         Route::post('/banners/status/{banner}', 'status')->name('banners.status');
         Route::delete('/banners/{banner}', 'destroy')->name('banners.destroy');
+    });
+
+    Route::controller(PromotionController::class)->group(function () {
+        Route::get('/promotions', 'index')->name('promotions.index');
+        Route::get('/promotions/create', 'create')->name('promotions.create');
+        Route::post('/promotions/store', 'store')->name('promotions.store');
+        Route::get('/promotions/edit/{promotion}', 'edit')->name('promotions.edit');
+        Route::post('/promotions/{promotion}', 'update')->name('promotions.update');
+        Route::post('/promotions/status/{promotion}', 'status')->name('promotions.status');
+        Route::delete('/promotions/{promotion}', 'destroy')->name('promotions.destroy');
     });
     
 });

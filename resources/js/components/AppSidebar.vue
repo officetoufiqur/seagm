@@ -16,6 +16,11 @@ const mainNavItems: NavItem[] = [
     href: '/banners',
     icon: MegaphoneIcon,
   },
+   {
+    title: 'Promotions',
+    href: '/promotions',
+    icon: MegaphoneIcon,
+  },
 ];
 
 </script>
