@@ -54,11 +54,11 @@ watch([search, entriesPerPage], () => {
 </script>
 
 <template>
-    <div class="">
-        <div class="flex items-center justify-between mb-3">
-            <h2 class="text-2xl font-semibold mb-4">{{ title }}</h2>
-            <Link v-if="createBtn" :href="createUrl || '#'" class="bg-[#0f79bc] hover:bg-[#4a4745] px-6 py-2 text-white rounded-md">{{ createText }}</Link>
-            <Link v-if="backBtn" :href="backUrl || '#'" class="bg-[#0f79bc] hover:bg-[#4a4745] px-6 py-2 text-white rounded-md">{{ backText }}</Link>
+    <div class="bg-white p-5 rounded">
+        <div class="flex items-center justify-between mb-3 border-b border-gray-200 border-dashed pb-3">
+            <h2 class="text-xl font-semibold">{{ title }}</h2>
+            <Link v-if="createBtn" :href="createUrl || '#'" class="bg-[#F79219] hover:bg-[#662B8E] duration-300 px-6 py-2 text-[15px] text-white rounded-md">{{ createText }}</Link>
+            <Link v-if="backBtn" :href="backUrl || '#'" class="bg-[#F79219] hover:bg-[#662B8E] duration-300 px-6 py-2 text-[15px] text-white rounded-md">{{ backText }}</Link>
         </div>
 
         <div class="flex items-center justify-between mb-3">
@@ -72,13 +72,13 @@ watch([search, entriesPerPage], () => {
             </div>
             <div class="text-sm">
                 <label class="mr-2">Search:</label>
-                <input v-model="search" type="text" class="border px-2 py-1 rounded border-gray-300" />
+                <input v-model="search" type="text" class="border px-2 py-1.5 rounded border-gray-300 w-100" />
             </div>
         </div>
 
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border relative ">
-                <thead class="bg-gray-100 text-sm text-gray-700">
+                <thead class="bg-[#F3F6F9] text-sm text-gray-700">
                     <tr>
                         <th v-for="col in columns" :key="col.key" class="px-4 py-4 text-left">
                             {{ col.label }}
@@ -117,12 +117,12 @@ watch([search, entriesPerPage], () => {
             </div>
             <div class="flex gap-1">
                 <button @click="currentPage--" :disabled="currentPage === 1"
-                    class="px-2 py-1 border rounded disabled:opacity-50">
+                    class="px-2 py-1 border rounded disabled:opacity-50 cursor-pointer">
                     ‹
                 </button>
-                <button class="px-2 py-1 border rounded bg-blue-600 text-white">{{ currentPage }}</button>
+                <button class="px-2 py-1 border rounded bg-[#F79219] hover:bg-[#662B8E] duration-300 text-white cursor-pointer">{{ currentPage }}</button>
                 <button @click="currentPage++" :disabled="currentPage >= totalPages"
-                    class="px-2 py-1 border rounded disabled:opacity-50">
+                    class="px-2 py-1 border rounded disabled:opacity-50 cursor-pointer">
                     ›
                 </button>
             </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\StripePaymentController;
@@ -20,7 +21,10 @@ Route::controller(AuthenticationController::class)->group(function () {
 
     Route::post('/send-mobile-otp', 'sendMobileOtp');
     Route::post('/verify-mobile-otp', 'verifyMobileOtp');
+    Route::post('/set-password', 'completeSignup');
 });
+
+Route::get('/banners', [BannerController::class, 'banners']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
 Route::post('/paynow/callback', [PaynowController::class, 'callback']);

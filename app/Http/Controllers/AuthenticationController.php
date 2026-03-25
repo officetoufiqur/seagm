@@ -22,10 +22,10 @@ class AuthenticationController extends Controller
 
         $otp = '123456';
 
-        $user = User::create(
-            ['email' => $request->email],
-            ['email_verified_code' => $otp]
-        );
+        $user = User::create([
+            'email' => $request->email,
+            'email_verified_code' => $otp,
+        ]);
 
         // send email code
 
@@ -61,6 +61,7 @@ class AuthenticationController extends Controller
 
         return response()->json([
             'status' => true,
+            'data' => $user->id,
             'message' => 'Email verified successfully',
         ]);
     }
@@ -74,10 +75,10 @@ class AuthenticationController extends Controller
 
         $otp = '123456';
 
-        $user = User::create(
-            ['mobile' => $request->mobile],
-            ['mobile_verified_code' => $otp]
-        );
+        $user = User::create([
+            'mobile' => $request->mobile,
+            'mobile_verified_code' => $otp
+            ]);
 
         // Here you integrate SMS / WhatsApp API
         // Example: Twilio, Vonage, WhatsApp API
@@ -114,6 +115,7 @@ class AuthenticationController extends Controller
 
         return response()->json([
             'status' => true,
+            'data' => $user->id,
             'message' => 'Mobile verified successfully',
         ]);
     }
@@ -138,8 +140,12 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'status' => true,
+            'token' => $token,
+            'data' => $user,
             'message' => 'Signup completed successfully',
         ]);
     }

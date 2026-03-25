@@ -3,13 +3,18 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid, MegaphoneIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
   {
     title: 'Dashboard',
     href: '/dashboard',
     icon: LayoutGrid,
+  },
+  {
+    title: 'Banners',
+    href: '/banners',
+    icon: MegaphoneIcon,
   },
 ];
 
