@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\PaypalWebhookController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
@@ -33,8 +34,8 @@ Route::post('/paynow/callback', [PaynowController::class, 'callback']);
 Route::get('/paynow/status', [PaynowController::class, 'status']);
 
 // paypal payment
-Route::get('paypal/payment', [PaypalController::class, 'payment'])->middleware('auth:sanctum');
-
+Route::get('paypal/payment', [PaypalController::class, 'payment']);
+Route::post('/paypal/webhook', [PaypalWebhookController::class, 'handle']);
 
 Route::post('/stripe/checkout', [StripePaymentController::class, 'checkout'])->middleware('auth:sanctum');
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
