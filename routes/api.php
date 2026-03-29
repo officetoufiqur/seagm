@@ -6,6 +6,7 @@ use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Http\Request;
@@ -39,3 +40,10 @@ Route::post('/paypal/webhook', [PaypalWebhookController::class, 'handle']);
 
 Route::post('/stripe/checkout', [StripePaymentController::class, 'checkout'])->middleware('auth:sanctum');
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+// Skrill payment
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/payment/create', [SkrillController::class, 'create']);
+});
+
+Route::post('/payment/ipn', [SkrillController::class, 'ipn']);

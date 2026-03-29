@@ -4,6 +4,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\SkrillController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -20,6 +21,10 @@ Route::get('dashboard', function () {
 
 Route::get('paypal/payment/success', [PaypalController::class, 'paymentSuccess'])->name('paypal.payment.success');
 Route::get('paypal/payment/cancel', [PaypalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
+
+Route::get('/skrill/payment/success', [SkrillController::class, 'success'])->name('skrill.payment.success');
+Route::get('/skrill/payment/cancel', [SkrillController::class, 'cancel'])->name('skrill.payment.cancel');
+
 
 
 Route::middleware('auth')->group(function () {

@@ -45,7 +45,7 @@ class StripeWebhookController extends Controller
                 }
 
                 $payment->update([
-                    'status' => 'completed',
+                    'status' => 'paid',
                 ]);
 
                 $metadata = $session->metadata;
