@@ -31,9 +31,10 @@ const props = defineProps<{
 
 const columns = [
     { label: 'ID', key: 'id' },
+    { label: 'Heading', key: 'heading' },
     { label: 'Title', key: 'title' },
+    { label: 'Sub Title', key: 'subtitle' },
     { label: 'Image', key: 'image' },
-    { label: 'Url', key: 'url' },
     { label: 'Status', key: 'status' },
     { label: 'Action', key: 'action' },
 ]

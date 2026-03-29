@@ -2,8 +2,9 @@
 import AppLayout from '@/layouts/AppLayout.vue'
 import { dashboard } from '@/routes'
 import { type BreadcrumbItem } from '@/types'
-import { onMounted, onBeforeUnmount, reactive } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import { useForm } from '@inertiajs/vue3'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -12,47 +13,17 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ]
 
-import { ref, nextTick } from 'vue'
-
-const editorRef = ref<HTMLTextAreaElement | null>(null)
-
-const form = reactive({
-    content: ''
+const form = useForm({
+  title: '',
+  content: '',
 })
 
-let editor: any = null
+const content = ref('')
 
-onMounted(async () => {
-    const ClassicEditor = (window as any).ClassicEditor
-
-    await nextTick() 
-
-    if (!editorRef.value || !ClassicEditor) {
-        console.error('Editor not ready')
-        return
-    }
-
-    ClassicEditor
-        .create(editorRef.value)
-        .then((ed: any) => {
-            editor = ed
-
-            console.log('Editor working')
-
-            editor.model.document.on('change:data', () => {
-                form.content = editor.getData()
-            })
-        })
-        .catch((err: any) => {
-            console.error('CKEditor error:', err)
-        })
-})
-
-onBeforeUnmount(() => {
-    if (editor) {
-        editor.destroy()
-    }
-})
+const submit = () => {
+  form.content = content.value
+  form.post('/posts')
+}
 </script>
 
 <template>
@@ -60,9 +31,18 @@ onBeforeUnmount(() => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="m-5">
-            <h1>Create Post</h1>
+              <div>
+    <input v-model="form.title" placeholder="Title" />
 
-            <textarea ref="editorRef"></textarea>
+    <QuillEditor
+      v-model:content="content"
+      contentType="html"
+      theme="snow"
+      class="mt-4"
+    />
+
+    <button @click="submit" class="mt-4">Save</button>
+  </div>
         </div>
     </AppLayout>
 </template>

@@ -44,14 +44,14 @@ class PromotionController extends Controller
             'title' => 'required|string|max:500',
             'subtitle' => 'required|string|max:500',
             'icon' => 'required|string|max:500',
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'items' => 'required|array|min:1',
             'items.*.title' => 'required|string|max:255',
             'items.*.country' => 'required|string|max:255',
             'items.*.sales_count' => 'required|integer|max:255',
-            'items.*.rating' => 'required|numeric|max:255',
-            'items.*.image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'items.*.rating' => 'required|numeric|between:0,5',
+            'items.*.card_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $file = null;
@@ -73,8 +73,8 @@ class PromotionController extends Controller
         foreach ($request->items as $item) {
             $cardFile = null;
 
-            if ($request->hasFile('image')) {
-                $cardFile = FileUpload::storeFile($item['image'], 'uploads/promotions');
+            if (isset($item['card_image'])) {
+                $cardFile = FileUpload::storeFile($item['card_image'], 'uploads/promotions');
             }
 
             $promotion->items()->create([
@@ -82,7 +82,7 @@ class PromotionController extends Controller
                 'country' => $item['country'],
                 'sales_count' => $item['sales_count'],
                 'rating' => $item['rating'],
-                'image' => $cardFile,
+                'card_image' => $cardFile,
             ]);
         }
 
@@ -105,13 +105,13 @@ class PromotionController extends Controller
             'title' => 'required|string|max:500',
             'subtitle' => 'required|string|max:500',
             'icon' => 'required|string|max:500',
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.title' => 'required|string|max:255',
             'items.*.country' => 'required|string|max:255',
             'items.*.sales_count' => 'required|integer|max:255',
-            'items.*.rating' => 'required|numeric|max:255',
-            'items.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'items.*.rating' => 'required|numeric|between:0,5',
+            'items.*.card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
@@ -140,12 +140,12 @@ class PromotionController extends Controller
 
                 if ($promotionItem) {
 
-                    $itemImage = $promotionItem->image;
+                    $itemImage = $promotionItem->card_image;
 
-                    if ($request->hasFile("items.$index.image")) {
-                        FileUpload::deleteFile($promotionItem->image);
+                    if ($request->hasFile("items.$index.card_image")) {
+                        FileUpload::deleteFile($promotionItem->card_image);
 
-                        $itemImage = FileUpload::storeFile($request->file("items.$index.image"), 'uploads/promotions');
+                        $itemImage = FileUpload::storeFile($request->file("items.$index.card_image"), 'uploads/promotions');
                     }
 
                     $promotionItem->update([
@@ -153,7 +153,7 @@ class PromotionController extends Controller
                         'country' => $item['country'],
                         'sales_count' => $item['sales_count'],
                         'rating' => $item['rating'],
-                        'image' => $itemImage,
+                        'card_image' => $itemImage,
                     ]);
 
                     $existingIds[] = $promotionItem->id;
@@ -162,8 +162,11 @@ class PromotionController extends Controller
             } else {
                 $cardFile = null;
 
-                if ($request->hasFile("items.$index.image")) {
-                    $cardFile = FileUpload::storeFile($item['image'], 'uploads/promotions');
+                if ($request->hasFile("items.$index.card_image")) {
+                    $cardFile = FileUpload::storeFile(
+                        $request->file("items.$index.card_image"),
+                        'uploads/promotions'
+                    );
                 }
 
                 $newItem = $promotion->items()->create([
@@ -171,7 +174,7 @@ class PromotionController extends Controller
                     'country' => $item['country'],
                     'sales_count' => $item['sales_count'],
                     'rating' => $item['rating'],
-                    'image' => $cardFile,
+                    'card_image' => $cardFile,
                 ]);
 
                 $existingIds[] = $newItem->id;

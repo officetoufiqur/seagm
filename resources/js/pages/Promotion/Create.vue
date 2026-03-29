@@ -30,7 +30,7 @@ const form = useForm({
             country: '',
             sales_count: '',
             rating: '',
-            image: null as File | null,
+            card_image: null as File | null,
         }
     ]
 });
@@ -42,7 +42,7 @@ const addItem = async () => {
         country: '',
         sales_count: '',
         rating: '',
-        image: null,
+        card_image: null,
     });
 
     await nextTick();
@@ -54,7 +54,13 @@ const removeItem = (index: number) => {
     form.items.splice(index, 1);
 };
 
-// Submit
+const mainImage = (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    form.image = file;
+};
+
 const submit = () => {
     form.post('/promotions/store', {
         forceFormData: true
@@ -64,7 +70,7 @@ const submit = () => {
 // Init Dropify
 const initDropify = () => {
     $('.dropify').dropify({
-        height: 70,
+        height: 150,
         messages: {
             default: 'Drag and drop or click',
             replace: 'Replace',
@@ -122,11 +128,10 @@ onMounted(() => {
                                     {{ form.errors.icon }}
                                 </span>
                             </div>
-                            <div>
+                            <div class="h-30">
                                 <label for="desc" class="text-[#5D5D5D] font-medium text-sm">Description</label>
-                                <textarea name="" id="desc" v-model="form.description"
-                                    class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm"
-                                    rows="3"></textarea>
+                                <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
+                                    class="mt-4" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.description">
                                     {{ form.errors.description }}
                                 </span>
@@ -134,13 +139,14 @@ onMounted(() => {
 
                             <div>
                                 <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
-                                <InputLabel class="dropify" type="file" @input="form.image = $event.target.files[0]" />
+                                <input type="file" class="dropify" @change="mainImage" />
                             </div>
                         </div>
                     </div>
 
                     <!-- Add Button -->
-                    <button type="button" class="bg-blue-500 text-white px-4 py-1.5 rounded mb-4 text-sm ml-auto block cursor-pointer"
+                    <button type="button"
+                        class="bg-blue-500 text-white px-4 py-1.5 rounded mb-4 text-sm ml-auto block cursor-pointer"
                         @click="addItem">
                         + Add Card Item
                     </button>
@@ -174,19 +180,20 @@ onMounted(() => {
                                     </td>
 
                                     <td class="p-2 border">
-                                        <InputLabel v-model="item.sales_count" type="text" />
+                                        <InputLabel v-model="item.sales_count" type="number" />
                                     </td>
 
                                     <td class="p-2 border">
-                                        <InputLabel v-model="item.rating" type="text" />
+                                        <InputLabel v-model="item.rating" type="number" />
                                     </td>
 
                                     <td class="p-2 border">
-                                        <InputLabel type="file" @input="item.image = $event.target.files[0]" />
+                                        <InputLabel type="file" @input="item.card_image = $event.target.files[0]" />
                                     </td>
 
                                     <td class="p-2 border text-center">
-                                        <button type="button" class="bg-red-500 text-white px-3 py-1 rounded text-xs cursor-pointer"
+                                        <button type="button"
+                                            class="bg-red-500 text-white px-3 py-1 rounded text-xs cursor-pointer"
                                             @click="removeItem(index)">
                                             Remove
                                         </button>

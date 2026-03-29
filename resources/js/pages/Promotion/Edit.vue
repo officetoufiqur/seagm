@@ -23,7 +23,7 @@ interface Item {
     country: string;
     sales_count: string;
     rating: string;
-    image?: string;
+    card_image?: string;
 }
 
 interface FormItem {
@@ -33,7 +33,7 @@ interface FormItem {
     sales_count: string;
     rating: string;
     old_image: string | undefined;
-    image: File | null;
+    card_image: File | null;
     preview?: string;
 }
 
@@ -78,8 +78,8 @@ const form = useForm<FormData>({
             country: item.country,
             sales_count: item.sales_count,
             rating: item.rating,
-            old_image: item.image,
-            image: null as File | null,
+            old_image: item.card_image,
+            card_image: null as File | null,
             preview: undefined,
         }))
         : []
@@ -94,7 +94,7 @@ const addItem = async () => {
         sales_count: '',
         rating: '',
         old_image: '',
-        image: null as File | null,
+        card_image: null as File | null,
         preview: undefined,
     });
 
@@ -110,8 +110,15 @@ const handleItemImageChange = (e: Event, index: number) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
-    form.items[index].image = file;
+    form.items[index].card_image = file;
     form.items[index].preview = URL.createObjectURL(file);
+};
+
+const mainImage = (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    form.image = file;
 };
 
 // Submit
@@ -126,7 +133,7 @@ const submit = () => {
 const initDropify = () => {
     $('.mainImage').dropify({
         defaultFile: props.promotion.image,
-        height: 70,
+        height: 150,
         messages: {
             default: 'Drag and drop or click',
             replace: 'Replace',
@@ -166,16 +173,16 @@ onMounted(async () => {
                         <InputLabel label="Sub Title" v-model="form.subtitle" type="text" />
                         <InputLabel label="Icon" v-model="form.icon" type="text" />
 
-                        <div class="">
+                        <div class="h-30">
                             <label class="text-sm font-medium">Description</label>
-                            <textarea v-model="form.description" class="border rounded px-3 py-2 w-full text-sm"
-                                rows="3"></textarea>
+                            <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
+                                    class="mt-4" />
                         </div>
 
                         <!-- Main Image -->
                         <div>
                             <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
-                            <InputLabel class="mainImage" type="file" @input="form.image = $event.target.files[0]" />
+                            <input class="mainImage" type="file" @change="mainImage" />
                         </div>
                     </div>
 

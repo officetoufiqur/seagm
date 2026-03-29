@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('promotion_id')->constrained('promotions')->cascadeOnDelete();
             $table->string('title');
             $table->string('country');
-            $table->string('image');
+            $table->string('card_image');
             $table->integer('sales_count')->default(0);
             $table->decimal('rating', 3, 2)->default(0);
             $table->boolean('is_active')->default(true);

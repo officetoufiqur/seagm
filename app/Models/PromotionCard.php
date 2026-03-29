@@ -12,7 +12,7 @@ class PromotionCard extends Model
         'promotion_id',
         'title',
         'country',
-        'image',
+        'card_image',
         'sales_count',
         'rating',
         'is_active',
