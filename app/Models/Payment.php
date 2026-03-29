@@ -17,6 +17,11 @@ class Payment extends Model
         'payment_status',
         'poll_url',
         'currency',
+        'items',
+    ];
+
+    protected $casts = [
+        'items' => 'array',
     ];
 
     public function user()

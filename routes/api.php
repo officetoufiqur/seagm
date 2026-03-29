@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
@@ -29,13 +30,14 @@ Route::controller(AuthenticationController::class)->group(function () {
 
 Route::get('/banners', [BannerController::class, 'banners']);
 Route::get('/promotions', [PromotionController::class, 'promotions']);
+Route::get('/coupons', [CouponController::class, 'coupons']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
 Route::post('/paynow/callback', [PaynowController::class, 'callback']);
 Route::get('/paynow/status', [PaynowController::class, 'status']);
 
 // paypal payment
-Route::get('paypal/payment', [PaypalController::class, 'payment']);
+Route::post('paypal/payment', [PaypalController::class, 'payment'])->middleware('auth:sanctum');
 Route::post('/paypal/webhook', [PaypalWebhookController::class, 'handle']);
 
 Route::post('/stripe/checkout', [StripePaymentController::class, 'checkout'])->middleware('auth:sanctum');

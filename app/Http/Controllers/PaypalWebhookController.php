@@ -92,9 +92,25 @@ class PaypalWebhookController extends Controller
                     }
 
                     // Update payment
+                    $items = $payment->items;
+
+                    $allSuccess = true;
+
+                    // foreach ($items as $item) {
+
+                    //     // $res = SeagmHelper::post('v1/orders', [
+                    //     //     'card_id' => $item['card_id'],
+                    //     //     'card_type_id' => $item['id'],
+                    //     //     'quantity' => $item['quantity'],
+                    //     // ]);
+
+                    //     if (! isset($res['success']) || ! $res['success']) {
+                    //         $allSuccess = false;
+                    //     }
+                    // }
+
                     $payment->update([
-                        'payment_status' => 'paid',
-                        'payload' => json_encode($request->all()),
+                        'payment_status' => $allSuccess ? 'paid' : 'failed'
                     ]);
 
                     break;
@@ -131,7 +147,7 @@ class PaypalWebhookController extends Controller
                 case 'CHECKOUT.ORDER.APPROVED':
 
                     Log::info('Order approved', [
-                        'resource' => $resource
+                        'resource' => $resource,
                     ]);
 
                     break;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
@@ -48,6 +49,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/promotions/{promotion}', 'update')->name('promotions.update');
         Route::post('/promotions/status/{promotion}', 'status')->name('promotions.status');
         Route::delete('/promotions/{promotion}', 'destroy')->name('promotions.destroy');
+    });
+
+    Route::controller(CouponController::class)->group(function () {
+        Route::get('/coupons', 'index')->name('coupons.index');
+        Route::get('/coupons/create', 'create')->name('coupons.create');
+        Route::post('/coupons/store', 'store')->name('coupons.store');
+        Route::get('/coupons/edit/{coupon}', 'edit')->name('coupons.edit');
+        Route::post('/coupons/update/{coupon}', 'update')->name('coupons.update');
+        Route::post('/coupons/status/{coupon}', 'status')->name('coupons.status');
+        Route::delete('/coupons/{coupon}', 'destroy')->name('coupons.destroy');
     });
     
 });

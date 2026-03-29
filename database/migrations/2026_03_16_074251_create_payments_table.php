@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->string('poll_url')->nullable();
+            $table->json('items')->nullable();
             $table->timestamps();
         });
     }

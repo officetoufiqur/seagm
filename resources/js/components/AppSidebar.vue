@@ -3,7 +3,7 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid, MegaphoneIcon } from 'lucide-vue-next';
+import { ConstructionIcon, LayoutGrid, MegaphoneIcon, SquarePercentIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
   {
@@ -19,7 +19,12 @@ const mainNavItems: NavItem[] = [
    {
     title: 'Promotions',
     href: '/promotions',
-    icon: MegaphoneIcon,
+    icon: ConstructionIcon,
+  },
+   {
+    title: 'Coupons',
+    href: '/coupons',
+    icon: SquarePercentIcon,
   },
 ];
 

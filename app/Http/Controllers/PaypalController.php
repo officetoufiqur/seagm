@@ -13,7 +13,16 @@ class PaypalController extends Controller
 {
     use ApiResponse;
 
-    public function payment(Request $request)
+      public function payment(Request $request)
+    {
+        if ($request->has('items')) {
+            return $this->handleMultipleItems($request);
+        }
+
+        return $this->handleSingleItem($request);
+    }
+
+    private function handleSingleItem(Request $request)
     {
         $request->validate([
             'card_id' => 'required',
@@ -21,69 +30,122 @@ class PaypalController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
+        $item = [
+            'card_id' => $request->card_id,
+            'id' => $request->id,
+            'quantity' => $request->quantity
+        ];
+
+        return $this->processItems([$item]);
+    }
+
+    private function handleMultipleItems(Request $request)
+    {
+        $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.card_id' => 'required',
+            'items.*.id' => 'required',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        return $this->processItems($request->items);
+    }
+
+    private function processItems($items)
+    {
         try {
-            $data = SeagmHelper::get("v1/card-categories/{$request->card_id}/card-types");
+            $totalAmount = 0;
+            $currency = null;
+            $paypalItems = [];
 
-            $res = collect($data['data'])->firstWhere('id', $request->id);
+            foreach ($items as $item) {
 
-            if (! $res) {
-                return response()->json([
-                    'error' => 'Card type not found',
-                ], 400);
-            }
+                $data = SeagmHelper::get("v1/card-categories/{$item['card_id']}/card-types");
+                $res = collect($data['data'])->firstWhere('id', $item['id']);
 
-            $quantity = $request->quantity;
-            $totalAmount = $res['unit_price'] * $quantity;
-
-            $provider = new PayPalClient;
-            $provider->setApiCredentials(config('paypal'));
-            $provider->getAccessToken();
-
-            $response = $provider->createOrder([
-                'intent' => 'CAPTURE',
-                'application_context' => [
-                    'return_url' => route('paypal.payment.success'),
-                    'cancel_url' => route('paypal.payment.cancel'),
-                ],
-                'purchase_units' => [
-                    [
-                        'amount' => [
-                            'currency_code' => strtoupper($res['currency']),
-                            'value' => number_format($totalAmount, 2, '.', ''),
-                        ],
-                    ],
-                ],
-            ]);
-
-            if (isset($response['id']) && $response['id']) {
-                Payment::create([
-                    'transaction_id' => $response['id'],
-                    'user_id' => Auth::id(),
-                    'amount' => $totalAmount,
-                    'currency' => $res['currency'],
-                    'payment_method' => 'PayPal',
-                    'payment_status' => 'pending',
-                ]);
-
-                foreach ($response['links'] as $link) {
-                    if ($link['rel'] === 'approve') {
-                        return $this->successResponse($link['href'], 200);
-                    }
+                if (! $res) {
+                    return response()->json(['error' => 'Card not found'], 400);
                 }
-            } else {
-                return redirect()->route('paypal.payment.cancel');
+
+                $totalAmount += $res['unit_price'] * $item['quantity'];
+                $currency = $res['currency'];
+
+                $paypalItems[] = [
+                    'name' => 'Card Item',
+                    'unit_amount' => [
+                        'currency_code' => strtoupper($currency),
+                        'value' => number_format($res['unit_price'], 2, '.', ''),
+                    ],
+                    'quantity' => (string)$item['quantity'],
+                ];
             }
+
+            return $this->createPaypalOrder($totalAmount, $currency, $paypalItems, $items);
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Something went wrong', 500);
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    private function createPaypalOrder($totalAmount, $currency, $paypalItems, $items)
+    {
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $provider->getAccessToken();
+
+        $response = $provider->createOrder([
+            'intent' => 'CAPTURE',
+            'application_context' => [
+                'return_url' => route('paypal.payment.success'),
+                'cancel_url' => route('paypal.payment.cancel'),
+            ],
+            'purchase_units' => [
+                [
+                    'amount' => [
+                        'currency_code' => strtoupper($currency),
+                        'value' => number_format($totalAmount, 2, '.', ''),
+                        'breakdown' => [
+                            'item_total' => [
+                                'currency_code' => strtoupper($currency),
+                                'value' => number_format($totalAmount, 2, '.', ''),
+                            ],
+                        ],
+                    ],
+                    'items' => $paypalItems,
+
+                    // metadata
+                    'custom_id' => Auth::id()
+                ]
+            ],
+        ]);
+
+        if (isset($response['id'])) {
+
+            Payment::create([
+                'transaction_id' => $response['id'],
+                'user_id' => Auth::id(),
+                'amount' => $totalAmount,
+                'currency' => $currency,
+                'payment_status' => 'pending',
+                'payment_method' => 'PayPal',
+                'items' => $items,
+            ]);
+
+            foreach ($response['links'] as $link) {
+                if ($link['rel'] === 'approve') {
+                    return $this->successResponse($link['href'], 200);
+                }
+            }
         }
 
+        return $this->errorResponse('Payment failed', 500);
     }
 
     public function paymentCancel()
     {
         return $this->errorResponse('Payment cancelled.', 500);
     }
+
 
     public function paymentSuccess(Request $request)
     {
