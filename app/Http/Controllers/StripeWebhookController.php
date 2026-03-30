@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\SeagmHelper;
+// use App\Helpers\SeagmHelper;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,43 +26,61 @@ class StripeWebhookController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        if ($event->type === 'checkout.session.completed') {
+        switch ($event->type) {
 
-            $session = $event->data->object;
+            case 'checkout.session.completed':
 
-            DB::transaction(function () use ($session) {
+                $session = $event->data->object;
 
-                $payment = Payment::where('transaction_id', $session->id)->lockForUpdate()->first();
+                DB::transaction(function () use ($session) {
 
-                if (! $payment || $payment->status === 'completed') {
-                    return;
-                }
+                    $payment = Payment::where('transaction_id', $session->id)
+                        ->lockForUpdate()
+                        ->first();
 
-                $stripeAmount = $session->amount_total / 100;
+                    if (!$payment || $payment->status === 'paid') {
+                        return;
+                    }
 
-                if ((float) $payment->amount !== (float) $stripeAmount) {
-                    throw new \Exception('Amount mismatch');
-                }
+                    $stripeAmount = $session->amount_total / 100;
 
-                $payment->update([
-                    'status' => 'paid',
-                ]);
+                    if (abs($payment->amount - $stripeAmount) > 0.01) {
+                        Log::error('Amount mismatch for payment: '.$payment->id);
+                        return;
+                    }
 
-                $metadata = $session->metadata;
+                    $items = json_decode($session->metadata->items ?? '[]', true);
 
-                try {
-                    $order = SeagmHelper::post('v1/card-orders', [
-                        'type_id' => $metadata->type_id,
-                        'buy_amount' => $metadata->quantity ?? 1,
-                        'mch_order_id' => $payment->transaction_id,
+                    $allSuccess = true;
+
+                    // foreach ($items as $item) {
+                    //     try {
+                    //         SeagmHelper::post('v1/card-orders', [
+                    //             'type_id' => $item['id'],
+                    //             'buy_amount' => $item['quantity'],
+                    //             'mch_order_id' => $payment->transaction_id.'_'.$item['id'],
+                    //         ]);
+                    //     } catch (\Exception $e) {
+                    //         $allSuccess = false;
+                    //         Log::error('SEAGM Order Failed: '.$e->getMessage());
+                    //     }
+                    // }
+
+                    $payment->update([
+                        'status' => $allSuccess ? 'paid' : 'failed',
                     ]);
+                });
 
-                } catch (\Exception $e) {
-                    Log::error('SEAGM Order Failed: '.$e->getMessage());
-                    $payment->update(['status' => 'failed']);
-                }
+                break;
 
-            });
+            case 'checkout.session.expired':
+
+                $session = $event->data->object;
+
+                Payment::where('transaction_id', $session->id)
+                    ->update(['status' => 'expired']);
+
+                break;
         }
 
         return response()->json(['received' => true]);
