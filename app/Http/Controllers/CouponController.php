@@ -13,13 +13,28 @@ class CouponController extends Controller
     {
         $coupons = Coupon::with('product:id,name,code,image')->where('is_active', true)->get();
 
-        $totalCoupons = $coupons->sum('total_coupons');
-        $claimedCoupons = $coupons->sum('claimed_count');
+        return response()->json([
+            'coupons' => $coupons
+        ]);
+    }
+
+    public function couponDetails($id)
+    {
+        $coupon = Coupon::with('product:id,name,code,image')->find($id);
+
+        if (!$coupon) {
+            return response()->json([
+                'message' => 'Coupon not found.'
+            ], 404);
+        }
+
+        $totalCoupons = $coupon->total_coupons;
+        $claimedCoupons = $coupon->claimed_count;
 
         $couponUsedPercent = $totalCoupons > 0 ? round(($claimedCoupons / $totalCoupons) * 100, 2) : 0;
 
         return response()->json([
-            'coupons' => $coupons,
+            'coupon' => $coupon,
             'used_percent' => $couponUsedPercent
         ]);
     }

@@ -23,6 +23,17 @@ class PromotionController extends Controller
         return $this->successResponse($promotions, 'Promotions fetched successfully.');
     }
 
+    public function promotionDetails($id)
+    {
+        $promotion = Promotion::with('items')->find($id);
+
+        if (!$promotion) {
+            return $this->errorResponse('Promotion not found.', 404);
+        }
+
+        return $this->successResponse($promotion, 'Promotion fetched successfully.');
+    }
+
     public function index()
     {
         $promotions = Promotion::with('items')->get();

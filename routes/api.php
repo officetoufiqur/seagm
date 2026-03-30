@@ -30,7 +30,9 @@ Route::controller(AuthenticationController::class)->group(function () {
 
 Route::get('/banners', [BannerController::class, 'banners']);
 Route::get('/promotions', [PromotionController::class, 'promotions']);
+Route::get('/promotions/{id}', [PromotionController::class, 'promotionDetails']);
 Route::get('/coupons', [CouponController::class, 'coupons']);
+Route::get('/coupons/{id}', [CouponController::class, 'couponDetails']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
 Route::post('/paynow/callback', [PaynowController::class, 'callback']);
