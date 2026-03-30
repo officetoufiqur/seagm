@@ -3,29 +3,40 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { ConstructionIcon, LayoutGrid, MegaphoneIcon, SquarePercentIcon } from 'lucide-vue-next';
+import { ConstructionIcon, Grid2X2PlusIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, SquarePercentIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutGrid,
-  },
-  {
-    title: 'Banners',
-    href: '/banners',
-    icon: MegaphoneIcon,
-  },
-   {
-    title: 'Promotions',
-    href: '/promotions',
-    icon: ConstructionIcon,
-  },
-   {
-    title: 'Coupons',
-    href: '/coupons',
-    icon: SquarePercentIcon,
-  },
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Banners',
+        href: '/banners',
+        icon: MegaphoneIcon,
+    },
+    {
+        title: 'Promotions',
+        href: '/promotions',
+        icon: ConstructionIcon,
+    },
+    {
+        title: 'Coupons',
+        href: '/coupons',
+        icon: SquarePercentIcon,
+    },
+    {
+        title: 'News Categories',
+        href: '/news-categories',
+        icon: Grid2X2PlusIcon,
+    },
+    {
+        title: 'News',
+        href: '/news',
+        icon: NewspaperIcon,
+    },
+
 ];
 
 </script>
@@ -37,14 +48,14 @@ const mainNavItems: NavItem[] = [
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <Link href="dashboard">
-                        <div class="flex gap-2">
-                            <!-- <div class="flex aspect-square size-9 items-center justify-center rounded-md mt-3">
+                            <div class="flex gap-2">
+                                <!-- <div class="flex aspect-square size-9 items-center justify-center rounded-md mt-3">
                                 <img class="w-14" src="/assets/images/fabicon.png" alt="icon">
                             </div> -->
-                            <div class="grid flex-1 text-left text-sm mt-4">
-                                <img class="w-28" src="/assets/images/logo.png" alt="">
+                                <div class="grid flex-1 text-left text-sm mt-4">
+                                    <img class="w-28" src="/assets/images/logo.png" alt="">
+                                </div>
                             </div>
-                        </div>
                         </Link>
                     </SidebarMenuItem>
                 </SidebarMenu>

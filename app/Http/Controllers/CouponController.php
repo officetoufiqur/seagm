@@ -9,15 +9,6 @@ use Inertia\Inertia;
 
 class CouponController extends Controller
 {
-    public function coupons()
-    {
-        $coupons = Coupon::with('product:id,name,code,image')->where('is_active', true)->get();
-
-        return response()->json([
-            'coupons' => $coupons
-        ]);
-    }
-
     public function couponDetails($id)
     {
         $coupon = Coupon::with('product:id,name,code,image')->find($id);

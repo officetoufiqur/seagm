@@ -21,7 +21,7 @@ const form = useForm({
     heading: '',
     title: '',
     subtitle: '',
-    icon: '',
+    icon: null as File | null,
     description: '',
     image: null as File | null,
     items: [
@@ -61,6 +61,13 @@ const mainImage = (e: Event) => {
     form.image = file;
 };
 
+const iconImage = (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    form.icon = file;
+};
+
 const submit = () => {
     form.post('/promotions/store', {
         forceFormData: true
@@ -80,8 +87,21 @@ const initDropify = () => {
     });
 };
 
+const iconDropify = () => {
+    $('.dropifyIcon').dropify({
+        height: 150,
+        messages: {
+            default: 'Drag and drop or click',
+            replace: 'Replace',
+            remove: 'Remove',
+            error: 'Error'
+        }
+    });
+};
+
 onMounted(() => {
     initDropify();
+    iconDropify();
 });
 </script>
 
@@ -116,16 +136,10 @@ onMounted(() => {
                                     {{ form.errors.title }}
                                 </span>
                             </div>
-                            <div>
+                            <div class="col-span-2">
                                 <InputLabel label="Sub Title" v-model="form.subtitle" type="text" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.subtitle">
                                     {{ form.errors.subtitle }}
-                                </span>
-                            </div>
-                            <div>
-                                <InputLabel label="Icon" v-model="form.icon" type="text" />
-                                <span class="text-red-500 text-sm" v-if="form.errors.icon">
-                                    {{ form.errors.icon }}
                                 </span>
                             </div>
                             <div class="h-30">
@@ -137,9 +151,18 @@ onMounted(() => {
                                 </span>
                             </div>
 
-                            <div>
-                                <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
-                                <input type="file" class="dropify" @change="mainImage" />
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label for="" class="text-[#5D5D5D] font-medium text-sm">Icon</label>
+                                    <input type="file" class="dropifyIcon" @change="iconImage" />
+                                    <span class="text-red-500 text-sm" v-if="form.errors.icon">
+                                        {{ form.errors.icon }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
+                                    <input type="file" class="dropify" @change="mainImage" />
+                                </div>
                             </div>
                         </div>
                     </div>

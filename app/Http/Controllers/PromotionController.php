@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileUpload;
+use App\Models\Banner;
+use App\Models\Coupon;
+use App\Models\News;
 use App\Models\Promotion;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
@@ -12,7 +15,7 @@ class PromotionController extends Controller
 {
     use ApiResponse;
 
-    public function promotions()
+    public function home()
     {
         $promotions = Promotion::with('items')->where('status', 1)->get();
 
@@ -20,7 +23,32 @@ class PromotionController extends Controller
             return $this->errorResponse('Promotions not found.', 404);
         }
 
-        return $this->successResponse($promotions, 'Promotions fetched successfully.');
+         $coupons = Coupon::with('product:id,name,code,image')->where('is_active', true)->get();
+
+        if ($coupons->isEmpty()) {
+            return $this->errorResponse('Coupons not found.', 404);
+        }
+
+        $banners = Banner::where('status', 1)->get();
+
+        if ($banners->isEmpty()) {
+            return $this->errorResponse('Banners not found.', 404);
+        }
+
+        $news = News::with('category:id,name', 'author:id,name')->where('status', 1)->get();
+
+        if ($news->isEmpty()) {
+            return $this->errorResponse('News not found.', 404);
+        }
+
+        $data = [
+            'banners' => $banners,
+            'promotions' => $promotions,
+            'news' => $news,
+            'coupons' => $coupons
+        ];
+
+        return $this->successResponse($data, 'Home module fetched successfully.');
     }
 
     public function promotionDetails($id)
@@ -54,8 +82,8 @@ class PromotionController extends Controller
             'heading' => 'required|string|max:255',
             'title' => 'required|string|max:500',
             'subtitle' => 'required|string|max:500',
-            'icon' => 'required|string|max:500',
             'description' => 'required|string',
+            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'items' => 'required|array|min:1',
             'items.*.title' => 'required|string|max:255',
@@ -71,12 +99,17 @@ class PromotionController extends Controller
             $file = FileUpload::storeFile($request->file('image'), 'uploads/promotions');
         }
 
+        $icon = null;
+        if ($request->hasFile('icon')) {
+            $icon = FileUpload::storeFile($request->file('icon'), 'uploads/promotions');
+        }
+
         $promotion = new Promotion;
 
         $promotion->heading = $request->heading;
         $promotion->title = $request->title;
         $promotion->subtitle = $request->subtitle;
-        $promotion->icon = $request->icon;
+        $promotion->icon = $icon;
         $promotion->description = $request->description;
         $promotion->image = $file;
         $promotion->save();
@@ -115,7 +148,6 @@ class PromotionController extends Controller
             'heading' => 'required|string|max:255',
             'title' => 'required|string|max:500',
             'subtitle' => 'required|string|max:500',
-            'icon' => 'required|string|max:500',
             'description' => 'required|string',
             'items' => 'required|array|min:1',
             'items.*.title' => 'required|string|max:255',
@@ -123,11 +155,17 @@ class PromotionController extends Controller
             'items.*.sales_count' => 'required|integer|max:255',
             'items.*.rating' => 'required|numeric|between:0,5',
             'items.*.card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $file = $promotion->image;
+        $icon = $promotion->icon;
 
+        if ($request->hasFile('icon')) {
+            FileUpload::deleteFile($promotion->icon);
+            $icon = FileUpload::storeFile($request->file('icon'), 'uploads/promotions');
+        }
         if ($request->hasFile('image')) {
             $file = FileUpload::updateFile($request->file('image'), 'uploads/promotions', $file);
         }
@@ -135,7 +173,7 @@ class PromotionController extends Controller
         $promotion->heading = $request->heading;
         $promotion->title = $request->title;
         $promotion->subtitle = $request->subtitle;
-        $promotion->icon = $request->icon;
+        $promotion->icon = $icon;
         $promotion->description = $request->description;
         $promotion->image = $file;
         $promotion->save();
@@ -207,6 +245,7 @@ class PromotionController extends Controller
 
     public function destroy(Promotion $promotion)
     {
+        FileUpload::deleteFile($promotion->icon);
         FileUpload::deleteFile($promotion->image);
         $promotion->delete();
 

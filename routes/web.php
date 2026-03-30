@@ -3,6 +3,8 @@
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\NewsCategoryController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
@@ -59,6 +61,26 @@ Route::middleware('auth')->group(function () {
         Route::post('/coupons/update/{coupon}', 'update')->name('coupons.update');
         Route::post('/coupons/status/{coupon}', 'status')->name('coupons.status');
         Route::delete('/coupons/{coupon}', 'destroy')->name('coupons.destroy');
+    });
+
+    Route::controller(NewsCategoryController::class)->group(function () {
+        Route::get('/news-categories', 'index')->name('news-categories.index');
+        Route::get('/news-categories/create', 'create')->name('news-categories.create');
+        Route::post('/news-categories/store', 'store')->name('news-categories.store');
+        Route::get('/news-categories/edit/{category}', 'edit')->name('news-categories.edit');
+        Route::post('/news-categories/update/{category}', 'update')->name('news-categories.update');
+        Route::post('/news-categories/status/{category}', 'status')->name('news-categories.status');
+        Route::delete('/news-categories/{category}', 'destroy')->name('news-categories.destroy');
+    });
+
+    Route::controller(NewsController::class)->group(function () {
+        Route::get('/news', 'index')->name('news.index');
+        Route::get('/news/create', 'create')->name('news.create');
+        Route::post('/news/store', 'store')->name('news.store');
+        Route::get('/news/edit/{news}', 'edit')->name('news.edit');
+        Route::post('/news/update/{news}', 'update')->name('news.update');
+        Route::post('/news/status/{news}', 'status')->name('news.status');
+        Route::delete('/news/{news}', 'destroy')->name('news.destroy');
     });
     
 });

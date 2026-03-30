@@ -11,17 +11,6 @@ use Inertia\Inertia;
 class BannerController extends Controller
 {
     use ApiResponse;
-
-    public function banners()
-    {
-        $banners = Banner::where('status', 1)->get();
-
-        if ($banners->isEmpty()) {
-            return $this->errorResponse('Banners not found.', 404);
-        }
-
-        return $this->successResponse($banners, 'Banners fetched successfully.');
-    }
     
     public function index()
     {

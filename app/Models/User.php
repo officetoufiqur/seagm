@@ -20,6 +20,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'name',
         'email',
         'email_verified_at',
         'mobile',
@@ -56,5 +57,15 @@ class User extends Authenticatable
     public function claims()
     {
         return $this->hasMany(CouponClaim::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class, 'author_id');
     }
 }

@@ -42,7 +42,7 @@ interface FormData {
     heading: string;
     title: string;
     subtitle: string;
-    icon: string;
+    icon: File | null;
     description: string;
     image: File | null;
     items: FormItem[];
@@ -68,7 +68,7 @@ const form = useForm<FormData>({
     heading: props.promotion.heading || '',
     title: props.promotion.title || '',
     subtitle: props.promotion.subtitle || '',
-    icon: props.promotion.icon || '',
+    icon: null as File | null,
     description: props.promotion.description || '',
     image: null as File | null,
     items: props.promotion.items?.length
@@ -121,6 +121,13 @@ const mainImage = (e: Event) => {
     form.image = file;
 };
 
+const iconImage = (e: Event) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    form.icon = file;
+};
+
 // Submit
 const submit = () => {
     form.post(`/promotions/${props.promotion.id}`, {
@@ -143,10 +150,23 @@ const initDropify = () => {
     });
 };
 
+const iconDropify = () => {
+    $('.dropifyIcon').dropify({
+        defaultFile: props.promotion.icon,
+        height: 150,
+        messages: {
+            default: 'Drag and drop or click',
+            replace: 'Replace',
+            remove: 'Remove',
+            error: 'Error'
+        }
+    });
+};
 
 onMounted(async () => {
     await nextTick();
     initDropify();
+    iconDropify();
 });
 </script>
 
@@ -170,19 +190,27 @@ onMounted(async () => {
 
                         <InputLabel label="Heading" v-model="form.heading" type="text" />
                         <InputLabel label="Title" v-model="form.title" type="text" />
-                        <InputLabel label="Sub Title" v-model="form.subtitle" type="text" />
-                        <InputLabel label="Icon" v-model="form.icon" type="text" />
+                        <InputLabel label="Sub Title" v-model="form.subtitle" type="text" class="col-span-2" />
 
                         <div class="h-30">
                             <label class="text-sm font-medium">Description</label>
                             <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
-                                    class="mt-4" />
+                                class="mt-4" />
                         </div>
 
                         <!-- Main Image -->
-                        <div>
-                            <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
-                            <input class="mainImage" type="file" @change="mainImage" />
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="" class="text-[#5D5D5D] font-medium text-sm">Icon</label>
+                                <input type="file" class="dropifyIcon" @change="iconImage" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.icon">
+                                    {{ form.errors.icon }}
+                                </span>
+                            </div>
+                            <div>
+                                <label for="" class="text-[#5D5D5D] font-medium text-sm">Main Image</label>
+                                <input class="mainImage" type="file" @change="mainImage" />
+                            </div>
                         </div>
                     </div>
 
@@ -228,9 +256,10 @@ onMounted(async () => {
 
                                     <td class="p-2 border">
                                         <div class="flex items-center gap-2">
-                                            <img v-if="item.preview || item.old_image" :src="item.preview || item.old_image"
-                                            class="w-12 h-10 rounded" />
-                                            <input type="file" @change="handleItemImageChange($event, index)" class="cursor-pointer" />
+                                            <img v-if="item.preview || item.old_image"
+                                                :src="item.preview || item.old_image" class="w-12 h-10 rounded" />
+                                            <input type="file" @change="handleItemImageChange($event, index)"
+                                                class="cursor-pointer" />
                                         </div>
                                     </td>
 

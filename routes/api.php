@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
@@ -28,10 +27,9 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/set-password', 'completeSignup');
 });
 
-Route::get('/banners', [BannerController::class, 'banners']);
-Route::get('/promotions', [PromotionController::class, 'promotions']);
+
+Route::get('/home', [PromotionController::class, 'home']);
 Route::get('/promotions/{id}', [PromotionController::class, 'promotionDetails']);
-Route::get('/coupons', [CouponController::class, 'coupons']);
 Route::get('/coupons/{id}', [CouponController::class, 'couponDetails']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
