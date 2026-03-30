@@ -21,4 +21,9 @@ class Product extends Model
     {
         return $this->hasMany(Coupon::class);
     }
+
+    public function exclusiveOffer()
+    {
+        return $this->hasOne(ExclusiveOffer::class);
+    }
 }

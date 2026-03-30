@@ -3,6 +3,7 @@
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
@@ -81,6 +82,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/news/update/{news}', 'update')->name('news.update');
         Route::post('/news/status/{news}', 'status')->name('news.status');
         Route::delete('/news/{news}', 'destroy')->name('news.destroy');
+    });
+
+    Route::controller(ExclusiveOfferController::class)->group(function () {
+       Route::get('/exclusive-offers', 'index')->name('exclusive-offers.index');
+       Route::get('/exclusive-offers/create', 'create')->name('exclusive-offers.create');
+       Route::post('/exclusive-offers/store', 'store')->name('exclusive-offers.store');
+       Route::get('/exclusive-offers/edit/{offer}', 'edit')->name('exclusive-offers.edit');
+       Route::post('/exclusive-offers/update/{offer}', 'update')->name('exclusive-offers.update');
+       Route::post('/exclusive-offers/status/{offer}', 'status')->name('exclusive-offers.status');
+       Route::delete('/exclusive-offers/{offer}', 'destroy')->name('exclusive-offers.destroy'); 
     });
     
 });

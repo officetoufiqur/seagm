@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\PaynowController;
@@ -28,7 +29,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 });
 
 
-Route::get('/home', [PromotionController::class, 'home']);
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('/promotions/{id}', [PromotionController::class, 'promotionDetails']);
 Route::get('/coupons/{id}', [CouponController::class, 'couponDetails']);
 
