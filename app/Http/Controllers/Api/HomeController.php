@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Coupon;
+use App\Models\ExclusiveOffer;
 use App\Models\News;
 use App\Models\Promotion;
 use App\Trait\ApiResponse;
@@ -39,11 +40,18 @@ class HomeController extends Controller
             return $this->errorResponse('News not found.', 404);
         }
 
+        $offers = ExclusiveOffer::where('is_active', 1)->get();
+
+        if ($offers->isEmpty()) {
+            return $this->errorResponse('Exclusive offers not found.', 404);
+        }
+
         $data = [
             'banners' => $banners,
-            'promotions' => $promotions,
+            'exclusive_offers' => $offers,
+            'coupons' => $coupons,
             'news' => $news,
-            'coupons' => $coupons
+            'promotions' => $promotions,
         ];
 
         return $this->successResponse($data, 'Home module fetched successfully.');

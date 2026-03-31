@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
@@ -32,6 +33,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/promotions/{id}', [PromotionController::class, 'promotionDetails']);
 Route::get('/coupons/{id}', [CouponController::class, 'couponDetails']);
+Route::get('/exclusive-offers/{id}', [ExclusiveOfferController::class, 'exclusiveOfferDetails']);
 
 Route::post('/paynow/initiate', [PaynowController::class, 'initiate']);
 Route::post('/paynow/callback', [PaynowController::class, 'callback']);

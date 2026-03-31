@@ -10,6 +10,23 @@ use Inertia\Inertia;
 
 class ExclusiveOfferController extends Controller
 {
+    public function exclusiveOfferDetails($id)
+    {
+        $offer = ExclusiveOffer::find($id);
+
+        if (!$offer) {
+            return response()->json(['message' => 'Exclusive offer not found.'], 404);
+        }
+
+        $product = Product::find($offer->product_id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found for this exclusive offer.'], 404);
+        }
+
+        return response()->json(['data' => $product], 200);
+    }
+
     public function index()
     {
         $offers = ExclusiveOffer::all();
