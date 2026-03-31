@@ -68,4 +68,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(News::class, 'author_id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

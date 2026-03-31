@@ -8,6 +8,7 @@ use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
@@ -29,7 +30,6 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/set-password', 'completeSignup');
 });
 
-
 Route::get('/home', [HomeController::class, 'index']);
 Route::get('/promotions/{id}', [PromotionController::class, 'promotionDetails']);
 Route::get('/coupons/{id}', [CouponController::class, 'couponDetails']);
@@ -49,6 +49,12 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 // Skrill payment
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payment/create', [SkrillController::class, 'create']);
+
+    Route::controller(ReviewController::class)->group(function () {
+        Route::post('/products/{product}/reviews', 'store');
+    });
 });
 
+
+Route::get('/products/{product}/reviews', [ReviewController::class, 'index']);
 Route::post('/payment/ipn', [SkrillController::class, 'ipn']);
