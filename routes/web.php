@@ -4,6 +4,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
+use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
@@ -28,6 +29,8 @@ Route::get('paypal/payment/cancel', [PaypalController::class, 'paymentCancel'])-
 
 Route::get('/skrill/payment/success', [SkrillController::class, 'success'])->name('skrill.payment.success');
 Route::get('/skrill/payment/cancel', [SkrillController::class, 'cancel'])->name('skrill.payment.cancel');
+
+Route::get('/hitpay/success', [HitPayController::class, 'hitpaySuccess'])->name('hitpay.success');
 
 
 

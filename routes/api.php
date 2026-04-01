@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
+use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
@@ -53,8 +54,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ReviewController::class)->group(function () {
         Route::post('/products/{product}/reviews', 'store');
     });
+
+    Route::post('/hitpay/payment', [HitPayController::class, 'hitpay']);
 });
 
+Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');
 
 Route::get('/products/{product}/reviews', [ReviewController::class, 'index']);
 Route::post('/payment/ipn', [SkrillController::class, 'ipn']);

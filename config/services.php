@@ -45,12 +45,18 @@ return [
         'id' => env('PAYNOW_ID'),
         'key' => env('PAYNOW_KEY'),
     ],
-    
+
     'seagm' => [
         'url' => env('SEAGM_URL'),
         'uid' => env('SEAGM_UID'),
         'secret_key' => env('SEAGM_SECRET_KEY'),
         'signature' => env('SEAGM_SIGNATURE'),
+    ],
+
+    'hitpay' => [
+        'key' => env('HITPAY_API_KEY'),
+        'url' => env('HITPAY_URL'),
+        'salt' => env('HITPAY_SALT'),
     ],
 
 ];
