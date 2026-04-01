@@ -8,6 +8,7 @@ use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
+use App\Http\Controllers\Profile\UserProfileController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SkrillController;
@@ -56,6 +57,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/hitpay/payment', [HitPayController::class, 'hitpay']);
+
+    Route::controller(UserProfileController::class)->group(function () {
+        Route::get('/profile', 'show');
+        Route::post('/profile/image', 'imageUpdate');
+        Route::post('/profile/username', 'usernameUpdate');
+        Route::post('/profile/change-password', 'changePassword');
+        Route::get('/profile/billing_addresses', 'getBillingAddress');
+        Route::post('/profile/billing_addresses', 'addBillingAddress');
+        Route::delete('/profile/delete', 'deleteAccount');
+    });
 });
 
 Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');

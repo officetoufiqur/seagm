@@ -78,8 +78,8 @@ class AuthenticationController extends Controller
 
         $user = User::create([
             'mobile' => $request->mobile,
-            'mobile_verified_code' => $otp
-            ]);
+            'mobile_verified_code' => $otp,
+        ]);
 
         // Here you integrate SMS / WhatsApp API
         // Example: Twilio, Vonage, WhatsApp API
@@ -136,7 +136,7 @@ class AuthenticationController extends Controller
                 'message' => 'User not found',
             ]);
         }
-        
+
         $username = UserName::generate();
 
         $user->update([
@@ -158,7 +158,13 @@ class AuthenticationController extends Controller
     {
         $request->validate([
             'login' => ['required'],
-            'password' => ['required'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d&@#]{8,20}$/',
+            ],
         ]);
 
         $key = Str::lower($request->login).'|'.$request->ip();

@@ -29,7 +29,8 @@ class User extends Authenticatable
         'password',
         'mobile_verified_code',
         'email_verified_code',
-        'role'
+        'role',
+        'image',
     ];
 
     /**
@@ -78,5 +79,10 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function billingAddress()
+    {
+        return $this->hasOne(BillingAddress::class);
     }
 }
