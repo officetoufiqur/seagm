@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CardCategoryController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use Illuminate\Support\Facades\Route;
@@ -95,6 +97,20 @@ Route::middleware('auth')->group(function () {
        Route::post('/exclusive-offers/update/{offer}', 'update')->name('exclusive-offers.update');
        Route::post('/exclusive-offers/status/{offer}', 'status')->name('exclusive-offers.status');
        Route::delete('/exclusive-offers/{offer}', 'destroy')->name('exclusive-offers.destroy'); 
+    });
+
+    Route::controller(CardCategoryController::class)->group(function () {
+        Route::get('/card-categories', 'index')->name('card-categories.index');
+        Route::get('/card-categories/edit/{category}', 'edit')->name('card-categories.edit');
+        Route::post('/card-categories/update/{category}', 'update')->name('card-categories.update');
+        Route::delete('/card-categories/{category}', 'destroy')->name('card-categories.destroy');
+    });
+
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/products', 'index')->name('products.index');
+        Route::get('/products/edit/{product}', 'edit')->name('products.edit');
+        Route::post('/products/update/{product}', 'update')->name('products.update');
+        Route::delete('/products/{product}', 'destroy')->name('products.destroy');
     });
     
 });
