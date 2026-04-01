@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\UserName;
 use App\Models\User;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
@@ -135,8 +136,11 @@ class AuthenticationController extends Controller
                 'message' => 'User not found',
             ]);
         }
+        
+        $username = UserName::generate();
 
         $user->update([
+            'username' => $username,
             'password' => Hash::make($request->password),
         ]);
 
