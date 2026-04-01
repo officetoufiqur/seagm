@@ -31,6 +31,7 @@ class User extends Authenticatable
         'email_verified_code',
         'role',
         'image',
+        'balance',
     ];
 
     /**
@@ -84,5 +85,10 @@ class User extends Authenticatable
     public function billingAddress()
     {
         return $this->hasOne(BillingAddress::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

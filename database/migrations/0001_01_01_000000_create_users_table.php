@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('role')->default('user');
             $table->string('image')->nullable();
+            $table->decimal('balance', 10, 2)->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

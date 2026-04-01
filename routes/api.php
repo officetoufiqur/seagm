@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
@@ -66,6 +67,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile/billing_addresses', 'getBillingAddress');
         Route::post('/profile/billing_addresses', 'addBillingAddress');
         Route::delete('/profile/delete', 'deleteAccount');
+    });
+
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/dashboard/overview', 'overview');
+        Route::get('/my-orders', 'myOrders');
     });
 });
 
