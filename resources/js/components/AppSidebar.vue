@@ -46,12 +46,12 @@ const mainNavItems: NavItem[] = [
         icon: ShieldIcon,
         subMenu: [
             {
-                title: 'Card Categories',
-                href: '/card-categories',
+                title: 'Cards',
+                href: '/card',
             },
             {
-                title: 'Cards',
-                href: '/products',
+                title: 'Card Items',
+                href: '/card-items',
             },
         ]
     }

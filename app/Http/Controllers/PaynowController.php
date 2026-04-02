@@ -36,7 +36,7 @@ class PaynowController extends Controller
             $reference = 'Order-'.uniqid();
 
             $payment = $paynow->createPayment($reference, $request->email);
-            $payment->add('Product', $amount);
+            $payment->add('Card', $amount);
 
             $response = $paynow->send($payment);
 

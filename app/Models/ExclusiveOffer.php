@@ -9,7 +9,7 @@ class ExclusiveOffer extends Model
     protected $table = 'exclusive_offers';
 
     protected $fillable = [
-        'product_id',
+        'card_item_id',
         'title',
         'subtitle',
         'discount_percent',
@@ -21,9 +21,9 @@ class ExclusiveOffer extends Model
         'is_active' => 'boolean',
     ];
 
-    public function product()
+    public function cardItem()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(CardItem::class, 'card_item_id');
     }
     
 

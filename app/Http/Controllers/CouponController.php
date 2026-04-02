@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Coupon;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,7 +11,7 @@ class CouponController extends Controller
 {
     public function couponDetails($id)
     {
-        $coupon = Coupon::with('product:id,name,code,image')->find($id);
+        $coupon = Coupon::with('cardItem:id,name,code,image')->find($id);
 
         if (!$coupon) {
             return response()->json([
@@ -41,16 +41,16 @@ class CouponController extends Controller
 
     public function create()
     {
-        $products = Product::select('id', 'name')->get();
+        $cards = Card::select('id', 'name')->get();
         return Inertia::render('Coupons/Create', [
-            'products' => $products
+            'cards' => $cards
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'card_id' => 'required|exists:cards,id',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'discount_percent' => 'required|numeric|min:0|max:100',
@@ -61,7 +61,7 @@ class CouponController extends Controller
         ]);
 
         Coupon::create([
-            'product_id' => $request->product_id,
+            'card_id' => $request->card_id,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'discount_percent' => $request->discount_percent,
@@ -77,11 +77,11 @@ class CouponController extends Controller
     public function edit($id)
     {
         $coupon = Coupon::findOrFail($id);
-        $products = Product::select('id', 'name')->get();
+        $cards = Card::select('id', 'name')->get();
 
         return Inertia::render('Coupons/Edit', [
             'coupon' => $coupon,
-            'products' => $products
+            'cards' => $cards
         ]);
     }
 
@@ -90,7 +90,7 @@ class CouponController extends Controller
         $coupon = Coupon::findOrFail($id);
 
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'card_id' => 'required|exists:cards,id',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'discount_percent' => 'required|numeric|min:0|max:100',
@@ -101,7 +101,7 @@ class CouponController extends Controller
         ]);
 
         $coupon->update([
-            'product_id' => $request->product_id,
+            'card_id' => $request->card_id,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'discount_percent' => $request->discount_percent,

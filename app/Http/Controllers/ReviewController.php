@@ -11,12 +11,12 @@ class ReviewController extends Controller
 {
     use ApiResponse;
 
-    public function index($productId)
+    public function index($id)
     {
-        $reviews = Review::where('product_id', $productId)->with('user:id,name')->get();
+        $reviews = Review::where('card_item_id', $id)->with('user:id,name')->get();
 
         if ($reviews->isEmpty()) {
-            return $this->errorResponse('No reviews found for this product.', 404);
+            return $this->errorResponse('No reviews found for this card item.', 404);
         }
 
         $totalReviews = $reviews->count();
@@ -31,7 +31,7 @@ class ReviewController extends Controller
         return $this->successResponse($data, 'Reviews fetched successfully.');
     }
 
-    public function store(Request $request, $productId)
+    public function store(Request $request, $id)
     {
         $request->validate([
             'rating' => 'required|numeric|min:1|max:5',
@@ -39,7 +39,7 @@ class ReviewController extends Controller
         ]);
 
         $review = Review::create([
-            'product_id' => $productId,
+            'card_item_id' => $id,
             'user_id' => Auth::id(),
             'rating' => $request->rating,
             'comment' => $request->comment,

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileUpload;
+use App\Models\CardItem;
 use App\Models\ExclusiveOffer;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,13 +18,13 @@ class ExclusiveOfferController extends Controller
             return response()->json(['message' => 'Exclusive offer not found.'], 404);
         }
 
-        $product = Product::find($offer->product_id);
+        $card = CardItem::find($offer->card_item_id);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found for this exclusive offer.'], 404);
+        if (!$card) {
+            return response()->json(['message' => 'Card not found for this exclusive offer.'], 404);
         }
 
-        return response()->json(['data' => $product], 200);
+        return response()->json(['data' => $card], 200);
     }
 
     public function index()
@@ -38,17 +38,17 @@ class ExclusiveOfferController extends Controller
 
     public function create()
     {
-        $products = Product::select('id', 'name')->get();
+        $cards = CardItem::select('id', 'name')->get();
 
         return Inertia::render('Exclusive/Create', [
-            'products' => $products,
+            'cards' => $cards,
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'card_item_id' => 'required|exists:card_items,id',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'discount_percent' => 'required|numeric|min:0|max:100',
@@ -62,7 +62,7 @@ class ExclusiveOfferController extends Controller
         }
 
         ExclusiveOffer::create([
-            'product_id' => $request->product_id,
+            'card_item_id' => $request->card_item_id,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'discount_percent' => $request->discount_percent,
@@ -75,11 +75,11 @@ class ExclusiveOfferController extends Controller
     public function edit($id)
     {
         $exclusiveOffer = ExclusiveOffer::findOrFail($id);
-        $products = Product::select('id', 'name')->get();
+        $cards = CardItem::select('id', 'name')->get();
 
         return Inertia::render('Exclusive/Edit', [
             'exclusiveOffer' => $exclusiveOffer,
-            'products' => $products,
+            'cards' => $cards,
         ]);
     }
 
@@ -88,7 +88,7 @@ class ExclusiveOfferController extends Controller
         $exclusiveOffer = ExclusiveOffer::findOrFail($id);
 
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'card_item_id' => 'required|exists:card_items,id',
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'discount_percent' => 'required|numeric|min:0|max:100',
@@ -102,7 +102,7 @@ class ExclusiveOfferController extends Controller
         }
 
         $exclusiveOffer->update([
-            'product_id' => $request->product_id,
+            'card_item_id' => $request->card_item_id,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'discount_percent' => $request->discount_percent,

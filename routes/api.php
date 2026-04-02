@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payment/create', [SkrillController::class, 'create']);
 
     Route::controller(ReviewController::class)->group(function () {
-        Route::post('/products/{product}/reviews', 'store');
+        Route::post('/card-items/{id}/reviews', 'store');
     });
 
     Route::post('/hitpay/payment', [HitPayController::class, 'hitpay']);
@@ -77,5 +77,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');
 
-Route::get('/products/{product}/reviews', [ReviewController::class, 'index']);
+Route::get('/card-items/{id}/reviews', [ReviewController::class, 'index']);
 Route::post('/payment/ipn', [SkrillController::class, 'ipn']);

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CardCategory extends Model
+class Card extends Model
 {
-    protected $table = 'card_categories';
+    protected $table = 'cards';
 
     protected $fillable = [
         'api_id',
@@ -16,7 +16,7 @@ class CardCategory extends Model
         'region',
         'publisher',
         'auto_delivery',
-        'icon',
+        'image',
     ];
 
     protected $casts = [
@@ -24,8 +24,13 @@ class CardCategory extends Model
         'status' => 'boolean',
     ];
 
-    public function products()
+    public function cardItems()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(CardItem::class);
+    }
+
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
     }
 }

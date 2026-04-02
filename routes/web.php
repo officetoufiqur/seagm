@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\BannerController;
-use App\Http\Controllers\CardCategoryController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use Illuminate\Support\Facades\Route;
@@ -99,18 +99,18 @@ Route::middleware('auth')->group(function () {
        Route::delete('/exclusive-offers/{offer}', 'destroy')->name('exclusive-offers.destroy'); 
     });
 
-    Route::controller(CardCategoryController::class)->group(function () {
-        Route::get('/card-categories', 'index')->name('card-categories.index');
-        Route::get('/card-categories/edit/{category}', 'edit')->name('card-categories.edit');
-        Route::post('/card-categories/update/{category}', 'update')->name('card-categories.update');
-        Route::delete('/card-categories/{category}', 'destroy')->name('card-categories.destroy');
+    Route::controller(CardController::class)->group(function () {
+        Route::get('/card', 'index')->name('card.index');
+        Route::get('/card/edit/{category}', 'edit')->name('card.edit');
+        Route::post('/card/update/{category}', 'update')->name('card.update');
+        Route::delete('/card/{category}', 'destroy')->name('card.destroy');
     });
 
-    Route::controller(ProductController::class)->group(function () {
-        Route::get('/products', 'index')->name('products.index');
-        Route::get('/products/edit/{product}', 'edit')->name('products.edit');
-        Route::post('/products/update/{product}', 'update')->name('products.update');
-        Route::delete('/products/{product}', 'destroy')->name('products.destroy');
+    Route::controller(CardItemController::class)->group(function () {
+        Route::get('/card-items', 'index')->name('card-items.index');
+        Route::get('/card-items/edit/{id}', 'edit')->name('card-items.edit');
+        Route::post('/card-items/update/{id}', 'update')->name('card-items.update');
+        Route::delete('/card-items/{id}', 'destroy')->name('card-items.destroy');
     });
     
 });

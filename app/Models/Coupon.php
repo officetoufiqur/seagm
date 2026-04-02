@@ -10,7 +10,7 @@ class Coupon extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
+        'card_id',
         'title',
         'subtitle',
         'discount_percent',
@@ -29,9 +29,9 @@ class Coupon extends Model
         'is_active' => 'boolean',
     ];
 
-    public function product()
+    public function card()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Card::class, 'card_id');
     }
 
     public function claims()

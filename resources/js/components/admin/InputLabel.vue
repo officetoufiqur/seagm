@@ -7,17 +7,21 @@ defineProps<{
   id?: string;
   name?: string;
   placeholder?: string;
-  modelValue?: string;
+  modelValue?: string | number;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (e: 'update:modelValue', value: string | number): void;
 }>();
 
 function updateValue(event: Event) {
   const target = event.target as HTMLInputElement | null;
   if (target) {
-    emit('update:modelValue', target.value);
+    if (type === 'number') {
+      emit('update:modelValue', target.valueAsNumber);
+    } else {
+      emit('update:modelValue', target.value);
+    }
   }
 }
 </script>

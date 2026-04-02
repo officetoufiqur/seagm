@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('card_categories', function (Blueprint $table) {
+        Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('api_id')->unique();
             $table->string('name');
@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('region')->nullable();
             $table->string('publisher')->nullable();
             $table->boolean('auto_delivery')->default(true);
-            $table->text('icon')->nullable();
+            $table->string('image')->nullable();
+            $table->string('description')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('card_categories');
+        Schema::dropIfExists('cards');
     }
 };

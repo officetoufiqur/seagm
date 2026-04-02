@@ -22,7 +22,7 @@ class HomeController extends Controller
             return $this->errorResponse('Promotions not found.', 404);
         }
 
-         $coupons = Coupon::with('product:id,name,code,image')->where('is_active', true)->get();
+         $coupons = Coupon::with('cardItem:id,name,code,image')->where('is_active', true)->get();
 
         if ($coupons->isEmpty()) {
             return $this->errorResponse('Coupons not found.', 404);

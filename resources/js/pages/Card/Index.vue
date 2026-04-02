@@ -10,25 +10,31 @@ import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Card Categories List',
-        href: '/card-categories',
+        title: 'Card items List',
+        href: '/card-items',
     },
 ];
 
-type Category = {
+type Card = {
     id: number
+    category_id: number
     api_id: number
-    name: string
-    code: string
-    mode: string
-    region: string
-    publisher: string
-    auto_delivery: boolean
-    icon: string
+    api_category_id: number
+    category_name: string
+    par_value_currency: string
+    par_value: number
+    currency: number
+    unit_price: number
+    max_amount: number
+    min_amount: number
+    origin_price: number
+    discount_rate: number
+    has_stock: boolean
+    status: boolean
 }
 
 const props = defineProps<{
-    categories: Category[];
+    cards: Card[];
     flash: {
         message?: string;
     };
@@ -36,18 +42,19 @@ const props = defineProps<{
 
 const columns = [
     { label: 'ID', key: 'id' },
-    { label: 'Name', key: 'name' },
-    { label: 'Code', key: 'code' },
-    { label: 'Mode', key: 'mode' },
-    { label: 'Region', key: 'region' },
-    { label: 'Publisher', key: 'publisher' },
+    { label: 'Category', key: 'category_name' },
+    { label: 'Par Value', key: 'par_value' },
+    { label: 'Currency', key: 'par_value_currency' },
+    { label: 'Price', key: 'unit_price' },
+    { label: 'Stock', key: 'has_stock' },
+    { label: 'Status', key: 'status' },
     { label: 'Action', key: 'action' },
 ]
 
-const data = ref(props.categories);
+const data = ref(props.cards);
 
 
-function deleteCategory(id: number) {
+function deleteCard(id: number) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -58,10 +65,10 @@ function deleteCategory(id: number) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete(`/news-categories/${id}`, {
+            router.delete(`/card-items/${id}`, {
                 preserveScroll: true,
                 onSuccess: () => {
-                    data.value = props.categories;
+                    data.value = props.cards;
                 }
             });
         }
@@ -72,20 +79,20 @@ function deleteCategory(id: number) {
 
 <template>
 
-    <Head title="Card Category" />
+    <Head title="Card items" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <FlashMessage :message="props.flash.message" />
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-7">
-            <FilterTable :rows="data" :columns="columns" title="Card Category List">
+            <FilterTable :rows="data" :columns="columns" title="Card items List">
 
                 <template #action="{ item }">
                     <div class="flex items-center gap-2">
-                        <Link :href="`/card-categories/edit/${item.id}`"
+                        <Link :href="`/card-items/edit/${item.id}`"
                             class="bg-[#0AB39C] text-sm cursor-pointer text-white rounded font-medium hover:bg-[#0AB39C] py-2 px-3">
                             <SquarePenIcon class="w-4.5 h-4.5" />
                         </Link>
-                        <button @click="deleteCategory(item.id)"
+                        <button @click="deleteCard(item.id)"
                             class="bg-[#F06548] text-sm cursor-pointer text-white rounded font-medium py-2 px-3">
                             <Trash2Icon class="w-4.5 h-4.5" />
                         </button>

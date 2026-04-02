@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('exclusive_offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            $table->foreignId('card_item_id')->constrained('card_items')->cascadeOnDelete();
             $table->string('title');
             $table->string('subtitle');
             $table->decimal('discount_percent', 8, 2);

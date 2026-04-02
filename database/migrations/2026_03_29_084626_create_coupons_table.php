@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('card_id')->constrained('cards')->onDelete('cascade');
             $table->string('title');
             $table->string('subtitle')->nullable();
             $table->integer('discount_percent');

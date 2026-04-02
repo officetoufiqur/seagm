@@ -28,7 +28,7 @@ class HitPayController extends Controller
 
         $items = [
             [
-                'name' => 'Sample Product',
+                'name' => 'Sample card',
                 'quantity' => 1,
                 'price' => $request->amount,
             ],

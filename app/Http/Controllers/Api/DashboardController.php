@@ -32,12 +32,12 @@ class DashboardController extends Controller
         $filter = $request->input('filter');
         $user = Auth::user();
 
-        $ordersQuery = $user->orders()->with('product');
+        $ordersQuery = $user->orders()->with('cardItem');
 
         if ($search) {
             $ordersQuery->whereHas('order', function ($query) use ($search) {
                 $query->where('title', 'like', '%'.$search.'%');
-            })->orWhereHas('product', function ($query) use ($search) {
+            })->orWhereHas('cardItem', function ($query) use ($search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('code', 'like', '%'.$search.'%');
             });

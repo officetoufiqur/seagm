@@ -14,13 +14,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{
-    products: {
+    cards: {
         id: number;
         name: string;
     }[];
     coupon: {
         id: number;
-        product_id: number;
+        card_id: number;
         title: string;
         subtitle: string;
         discount_percent: number;
@@ -38,7 +38,7 @@ function formatDate(date: string) {
 }
 
 const form = useForm({
-    product_id: props.coupon.product_id,
+    card_id: props.coupon.card_id,
     title: props.coupon.title,
     subtitle: props.coupon.subtitle,
     discount_percent: props.coupon.discount_percent.toString(),
@@ -79,17 +79,17 @@ const submit = () => {
                     <div class="mb-3 space-y-4">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="product_id" class="text-[#5D5D5D] font-medium text-sm">Select
-                                    Product</label>
-                                <select name="product_id" id="product_id" v-model="form.product_id"
+                                <label for="card_id" class="text-[#5D5D5D] font-medium text-sm">Select
+                                    Card</label>
+                                <select name="card_id" id="card_id" v-model="form.card_id"
                                     class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm">
-                                    <option value="">Select Product</option>
-                                    <option v-for="product in props.products" :value="product.id" :key="product.id">
-                                        {{ product.name }}
+                                    <option value="">Select Card</option>
+                                    <option v-for="card in props.cards" :value="card.id" :key="card.id">
+                                        {{ card.name }}
                                     </option>
                                 </select>
-                                <span class="text-red-500 text-sm" v-if="form.errors.product_id">
-                                    {{ form.errors.product_id }}
+                                <span class="text-red-500 text-sm" v-if="form.errors.card_id">
+                                    {{ form.errors.card_id }}
                                 </span>
                             </div>
                             <div>

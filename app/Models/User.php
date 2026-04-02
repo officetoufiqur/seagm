@@ -72,9 +72,9 @@ class User extends Authenticatable
         return $this->hasMany(News::class, 'author_id');
     }
 
-    public function products()
+    public function cardItems()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(CardItem::class, 'card_item_id');
     }
 
     public function reviews()

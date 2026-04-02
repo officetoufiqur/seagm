@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class CardItem extends Model
 {
     protected $fillable = [
-        'category_id',
+        'card_id',
+        'name',
         'api_id',
-        'api_category',
+        'api_category_id',
         'category_name',
         'par_value_currency',
         'par_value',
@@ -19,9 +20,7 @@ class Product extends Model
         'min_amount',
         'origin_price',
         'discount_rate',
-        'description',
         'has_stock',
-        'image',
         'status',
     ];
 
@@ -30,15 +29,11 @@ class Product extends Model
         'status' => 'boolean',
     ];
 
-     public function category()
+     public function card()
     {
-        return $this->belongsTo(CardCategory::class, 'category_id');
+        return $this->belongsTo(Card::class,);
     }
     
-    public function coupons()
-    {
-        return $this->hasMany(Coupon::class);
-    }
 
     public function exclusiveOffer()
     {

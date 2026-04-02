@@ -33,7 +33,7 @@ class StripePaymentController extends Controller
             $res = collect($data['data'])->firstWhere('id', $item['id']);
 
             if (!$res || $res['unit_price'] <= 0) {
-                return response()->json(['error' => 'Invalid product'], 400);
+                return response()->json(['error' => 'Invalid card'], 400);
             }
 
             // Currency check
@@ -53,7 +53,7 @@ class StripePaymentController extends Controller
             $lineItems[] = [
                 'price_data' => [
                     'currency' => $currency,
-                    'product_data' => [
+                    'card_data' => [
                         'name' => $res['name'],
                     ],
                     'unit_amount' => $unitAmount,
