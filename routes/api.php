@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
@@ -79,3 +80,6 @@ Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitp
 
 Route::get('/card-items/{id}/reviews', [ReviewController::class, 'index']);
 Route::post('/payment/ipn', [SkrillController::class, 'ipn']);
+
+Route::get('/cards', [CardApiController::class, 'index']);
+Route::get('/cards/{id}', [CardApiController::class, 'show']);

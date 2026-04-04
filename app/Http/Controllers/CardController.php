@@ -42,7 +42,7 @@ class CardController extends Controller
             'status' => 1,
         ]);
 
-        return redirect()->route('card-categories.index')->with('message', 'Card category updated successfully.');
+        return redirect()->route('card.index')->with('message', 'Card category updated successfully.');
     }
 
     public function destroy($id)
@@ -50,6 +50,6 @@ class CardController extends Controller
         $category = Card::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('card-categories.index')->with('message', 'Card category deleted successfully.');
+        return redirect()->route('card.index')->with('message', 'Card category deleted successfully.');
     }
 }

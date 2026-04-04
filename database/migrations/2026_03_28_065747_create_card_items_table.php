@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('card_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('card_id')->constrained('cards')->onDelete('cascade');
+            $table->string('api_category_id');
             $table->string('api_id')->unique();
             $table->string('name');
-            $table->string('api_category_id');
             $table->string('category_name');
             $table->string('par_value_currency');
             

@@ -26,11 +26,16 @@ class Card extends Model
 
     public function cardItems()
     {
-        return $this->hasMany(CardItem::class);
+        return $this->hasMany(CardItem::class, 'api_category_id', 'api_id');
     }
 
     public function coupons()
     {
         return $this->hasMany(Coupon::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'card_api_id', 'api_id');
     }
 }

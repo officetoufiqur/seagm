@@ -52,7 +52,7 @@ class CardItemController extends Controller
             'has_stock' => $request->has_stock ?? true
         ]);
 
-        return redirect()->route('cards.index')->with('message', 'Card updated successfully.');
+        return redirect()->route('card-items.index')->with('message', 'Card updated successfully.');
     }
 
     public function destroy($id)
@@ -65,6 +65,6 @@ class CardItemController extends Controller
 
         $card->delete();
 
-        return redirect()->route('cards.index')->with('message', 'Card deleted successfully.');
+        return redirect()->route('card-items.index')->with('message', 'Card deleted successfully.');
     }
 }

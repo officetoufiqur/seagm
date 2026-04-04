@@ -9,15 +9,15 @@ class Review extends Model
     protected $table = 'reviews';
 
     protected $fillable = [
-        'card_item_id',
+        'card_api_id',
         'user_id',
         'rating',
         'comment',
     ];
 
-    public function cardItem()
+    public function card()
     {
-        return $this->belongsTo(CardItem::class, 'card_item_id');
+        return $this->belongsTo(Card::class, 'card_api_id', 'api_id');
     }
 
     public function user()
