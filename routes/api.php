@@ -16,6 +16,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\TermsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -83,3 +84,5 @@ Route::post('/payment/ipn', [SkrillController::class, 'ipn']);
 
 Route::get('/cards', [CardApiController::class, 'index']);
 Route::get('/cards/{id}', [CardApiController::class, 'show']);
+
+Route::get('/terms', [TermsController::class, 'terms']);

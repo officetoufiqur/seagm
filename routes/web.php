@@ -12,6 +12,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
+use App\Http\Controllers\TermsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -113,6 +114,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('/card-items/{id}', 'destroy')->name('card-items.destroy');
     });
     
+    Route::controller(TermsController::class)->group(function () {
+        Route::get('/terms', 'index')->name('terms.index');
+        Route::get('/terms/create', 'create')->name('terms.create');
+        Route::post('/terms/store', 'store')->name('terms.store');
+        Route::get('/terms/edit/{id}', 'edit')->name('terms.edit');
+        Route::post('/terms/update/{id}', 'update')->name('terms.update');
+        Route::delete('/terms/{id}', 'destroy')->name('terms.destroy');
+    });
+
 });
 
 require __DIR__.'/settings.php';

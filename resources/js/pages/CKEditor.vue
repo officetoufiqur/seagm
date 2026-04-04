@@ -1,47 +1,22 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue'
-import { type BreadcrumbItem } from '@/types'
+import { reactive } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import { ref } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import CKEditor from '@/components/admin/CKEditor.vue';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-]
-
-const form = useForm({
-  title: '',
-  content: '',
+const form = reactive({
+    content: ''
 })
-
-const content = ref('')
-
-const submit = () => {
-  form.content = content.value
-  form.post('/posts')
-}
 </script>
 
 <template>
     <Head title="Create Post" />
 
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout>
         <div class="m-5">
-              <div>
-    <input v-model="form.title" placeholder="Title" />
+            <h1>Create Post</h1>
 
-    <QuillEditor
-      v-model:content="content"
-      contentType="html"
-      theme="snow"
-      class="mt-4"
-    />
-
-    <button @click="submit" class="mt-4">Save</button>
-  </div>
+            <CKEditor v-model="form.content" />
         </div>
     </AppLayout>
 </template>
