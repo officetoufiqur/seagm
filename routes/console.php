@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\DirectTopUpJob;
 use App\Jobs\SyncCardItemsJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -11,3 +12,4 @@ Artisan::command('inspire', function () {
 
 
 Schedule::job(new SyncCardItemsJob)->everyMinute();
+Schedule::job(new DirectTopUpJob)->everyMinute();

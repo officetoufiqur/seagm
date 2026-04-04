@@ -5,6 +5,7 @@ use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\DirectTopUpController;
 use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\NewsCategoryController;
@@ -121,6 +122,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/terms/edit/{id}', 'edit')->name('terms.edit');
         Route::post('/terms/update/{id}', 'update')->name('terms.update');
         Route::delete('/terms/{id}', 'destroy')->name('terms.destroy');
+    });
+
+    Route::controller(DirectTopUpController::class)->group(function () {
+        Route::get('/direct-top-up', 'index')->name('direct-top-up.index');
+        Route::get('/direct-top-up/edit/{id}', 'edit')->name('direct-top-up.edit');
+        Route::post('/direct-top-up/update/{id}', 'update')->name('direct-top-up.update');
+        Route::delete('/direct-top-up/{id}', 'destroy')->name('direct-top-up.destroy');
     });
 
 });
