@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FileUpload;
+use App\Models\Card;
 use App\Models\CardItem;
 use App\Models\ExclusiveOffer;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class ExclusiveOfferController extends Controller
 
     public function create()
     {
-        $cards = CardItem::select('id', 'name')->get();
+        $cards = Card::select('id', 'name')->get();
 
         return Inertia::render('Exclusive/Create', [
             'cards' => $cards,

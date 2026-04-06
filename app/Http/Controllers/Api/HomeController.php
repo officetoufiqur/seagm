@@ -13,38 +13,14 @@ use App\Trait\ApiResponse;
 class HomeController extends Controller
 {
     use ApiResponse;
-    
+
     public function index()
     {
         $promotions = Promotion::with('items')->where('status', 1)->get();
-
-        if ($promotions->isEmpty()) {
-            return $this->errorResponse('Promotions not found.', 404);
-        }
-
-         $coupons = Coupon::with('cardItem:id,name,code,image')->where('is_active', true)->get();
-
-        if ($coupons->isEmpty()) {
-            return $this->errorResponse('Coupons not found.', 404);
-        }
-
+        $coupons = Coupon::with('card:id,name,code,image')->where('is_active', true)->get();
         $banners = Banner::where('status', 1)->get();
-
-        if ($banners->isEmpty()) {
-            return $this->errorResponse('Banners not found.', 404);
-        }
-
         $news = News::with('category:id,name', 'author:id,name')->where('status', 1)->get();
-
-        if ($news->isEmpty()) {
-            return $this->errorResponse('News not found.', 404);
-        }
-
         $offers = ExclusiveOffer::where('is_active', 1)->get();
-
-        if ($offers->isEmpty()) {
-            return $this->errorResponse('Exclusive offers not found.', 404);
-        }
 
         $data = [
             'banners' => $banners,

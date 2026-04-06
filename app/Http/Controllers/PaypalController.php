@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\SeagmHelper;
+use App\Models\CardItem;
 use App\Models\Payment;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class PaypalController extends Controller
 {
     use ApiResponse;
 
-      public function payment(Request $request)
+    public function payment(Request $request)
     {
         if ($request->has('items')) {
             return $this->handleMultipleItems($request);
@@ -33,7 +34,7 @@ class PaypalController extends Controller
         $item = [
             'card_id' => $request->card_id,
             'id' => $request->id,
-            'quantity' => $request->quantity
+            'quantity' => $request->quantity,
         ];
 
         return $this->processItems([$item]);
@@ -60,8 +61,13 @@ class PaypalController extends Controller
 
             foreach ($items as $item) {
 
-                $data = SeagmHelper::get("v1/card-categories/{$item['card_id']}/card-types");
-                $res = collect($data['data'])->firstWhere('id', $item['id']);
+                // $data = SeagmHelper::get("v1/card-categories/{$item['card_id']}/card-types");
+                // $res = collect($data['data'])->firstWhere('id', $item['id']);
+
+                $res = CardItem::where('api_category_id', $item['card_id'])
+                    ->where('api_id', $item['id'])
+                    ->where('status', true)
+                    ->first();
 
                 if (! $res) {
                     return response()->json(['error' => 'Card not found'], 400);
@@ -76,7 +82,7 @@ class PaypalController extends Controller
                         'currency_code' => strtoupper($currency),
                         'value' => number_format($res['unit_price'], 2, '.', ''),
                     ],
-                    'quantity' => (string)$item['quantity'],
+                    'quantity' => (string) $item['quantity'],
                 ];
             }
 
@@ -114,8 +120,8 @@ class PaypalController extends Controller
                     'items' => $paypalItems,
 
                     // metadata
-                    'custom_id' => Auth::id()
-                ]
+                    'custom_id' => Auth::id(),
+                ],
             ],
         ]);
 
@@ -146,20 +152,27 @@ class PaypalController extends Controller
         return $this->errorResponse('Payment cancelled.', 500);
     }
 
-
     public function paymentSuccess(Request $request)
     {
-        $payment = Payment::where('transaction_id', $request->token)->first();
+        // $payment = Payment::where('transaction_id', $request->token)->first();
 
-        if (! $payment) {
-            return $this->errorResponse('Payment not found', 404);
-        }
+        // if (! $payment) {
+        //     return $this->errorResponse('Payment not found', 404);
+        // }
 
-        if ($payment->payment_status === 'paid') {
-            return $this->successResponse('Payment successful', 200);
-        }
+        // if ($payment->payment_status === 'paid') {
+        //     return $this->successResponse('Payment successful', 200);
+        // }
 
-        return $this->successResponse('Payment processing...', 200);
+        // return $this->successResponse('Payment processing...', 200);
+
+        $redirectParam = $request->get('param');
+
+        $frontendUrl = 'https://seagm.netlify.app/payment-success?'.http_build_query([
+            'param' => $redirectParam,
+        ]);
+
+        return redirect($frontendUrl);
     }
 
     // public function paymentSuccess(Request $request)

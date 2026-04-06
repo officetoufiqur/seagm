@@ -66,8 +66,9 @@ onMounted(() => {
                 <form @submit.prevent="submit">
                     <div class="space-y-3 mb-5">
                         <div>
-                            <InputLabel forr="url" :label="'URL'" v-model="form.url" type="text"
-                                :placeholder="'Enter your url'" />
+                            <Label :label="'URL'" forr="url" />
+                            <input type="text" v-model="form.url" placeholder="Enter your url"
+                                class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm" />
                             <span class="text-red-500 text-sm" v-if="form.errors.url">{{ form.errors.url }}</span>
                         </div>
                         <div>

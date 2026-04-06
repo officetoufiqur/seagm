@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\SeagmHelper;
+use App\Models\CardItem;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,20 +28,25 @@ class StripePaymentController extends Controller
 
         foreach ($request->items as $item) {
 
-            $data = SeagmHelper::get("v1/card-categories/{$item['card_id']}/card-types");
+            $res = CardItem::where('api_category_id', $item['card_id'])
+                ->where('api_id', $item['id'])
+                ->where('status', true)
+                ->first();
 
-            $res = collect($data['data'])->firstWhere('id', $item['id']);
+            if (! $res || $res->unit_price <= 0) {
+                return response()->json(['error' => 'Invalid card'], 400);
+            }
 
-            if (!$res || $res['unit_price'] <= 0) {
+            if (! $res || $res['unit_price'] <= 0) {
                 return response()->json(['error' => 'Invalid card'], 400);
             }
 
             // Currency check
-            if (!$currency) {
+            if (! $currency) {
                 $currency = strtolower($res['currency']);
             } elseif ($currency !== strtolower($res['currency'])) {
                 return response()->json([
-                    'error' => 'All items must have same currency'
+                    'error' => 'All items must have same currency',
                 ], 400);
             }
 
@@ -53,7 +58,7 @@ class StripePaymentController extends Controller
             $lineItems[] = [
                 'price_data' => [
                     'currency' => $currency,
-                    'card_data' => [
+                    'product_data' => [
                         'name' => $res['name'],
                     ],
                     'unit_amount' => $unitAmount,
@@ -70,7 +75,7 @@ class StripePaymentController extends Controller
                 'user_id' => Auth::id(),
                 'items' => json_encode($request->items),
             ],
-            'success_url' => config('app.url').'/payment-success',
+            'success_url' => "https://seagm.netlify.app/payment-success",
             'cancel_url' => config('app.url').'/payment-cancel',
         ], [
             'idempotency_key' => uniqid('stripe_', true),
@@ -89,5 +94,16 @@ class StripePaymentController extends Controller
         return response()->json([
             'url' => $session->url,
         ]);
+    }
+
+    public function success(Request $request)
+    {
+        $redirectParam = $request->get('param');
+
+        $frontendUrl = 'https://seagm.netlify.app/payment-success?'.http_build_query([
+            'param' => $redirectParam,
+        ]);
+
+        return redirect($frontendUrl);
     }
 }

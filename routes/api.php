@@ -28,12 +28,17 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/login', 'login');
+    Route::post('/mobile-login', 'mobileLogin');
 
     Route::post('/send-email-otp', 'sendEmailOtp');
     Route::post('/verify-email-otp', 'verifyEmailOtp');
-
+    
     Route::post('/send-mobile-otp', 'sendMobileOtp');
     Route::post('/verify-mobile-otp', 'verifyMobileOtp');
+    
+    Route::post('/verify-email', 'verifyEmail');
+    Route::post('/verify-mobile', 'verifyMobile');
+
     Route::post('/set-password', 'completeSignup');
 });
 

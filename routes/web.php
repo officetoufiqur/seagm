@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MobileRechargeController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardItemController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
+use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\TermsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +32,8 @@ Route::get('dashboard', function () {
 
 Route::get('paypal/payment/success', [PaypalController::class, 'paymentSuccess'])->name('paypal.payment.success');
 Route::get('paypal/payment/cancel', [PaypalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
+
+Route::get('stripe/payment/success', [StripePaymentController::class, 'success'])->name('stripe.payment.success');
 
 Route::get('/skrill/payment/success', [SkrillController::class, 'success'])->name('skrill.payment.success');
 Route::get('/skrill/payment/cancel', [SkrillController::class, 'cancel'])->name('skrill.payment.cancel');
@@ -129,6 +133,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/direct-top-up/edit/{id}', 'edit')->name('direct-top-up.edit');
         Route::post('/direct-top-up/update/{id}', 'update')->name('direct-top-up.update');
         Route::delete('/direct-top-up/{id}', 'destroy')->name('direct-top-up.destroy');
+    });
+
+    Route::controller(MobileRechargeController::class)->group(function () {
+        Route::get('/mobile-recharge', 'index')->name('mobile-recharge.index');
     });
 
 });

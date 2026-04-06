@@ -39,20 +39,20 @@ class PromotionController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'heading' => 'required|string|max:255',
-            'title' => 'required|string|max:500',
-            'subtitle' => 'required|string|max:500',
-            'description' => 'required|string',
-            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'items' => 'required|array|min:1',
-            'items.*.title' => 'required|string|max:255',
-            'items.*.country' => 'required|string|max:255',
-            'items.*.sales_count' => 'required|integer|max:255',
-            'items.*.rating' => 'required|numeric|between:0,5',
-            'items.*.card_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-        ]);
+        // $request->validate([
+        //     'heading' => 'required|string|max:255',
+        //     'title' => 'required|string|max:500',
+        //     'subtitle' => 'required|string|max:500',
+        //     'description' => 'required|string',
+        //     'icon' => 'required|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        //     'image' => 'required|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        //     'items' => 'required|array|min:1',
+        //     'items.*.title' => 'required|string|max:255',
+        //     'items.*.country' => 'required|string|max:255',
+        //     'items.*.sales_count' => 'required|integer|max:255',
+        //     'items.*.rating' => 'required|numeric|between:0,5',
+        //     'items.*.card_image' => 'required|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        // ]);
 
         $file = null;
 

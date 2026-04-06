@@ -11,7 +11,7 @@ class CouponController extends Controller
 {
     public function couponDetails($id)
     {
-        $coupon = Coupon::with('cardItem:id,name,code,image')->find($id);
+        $coupon = Coupon::with('card:id,name,code,image')->find($id);
 
         if (!$coupon) {
             return response()->json([

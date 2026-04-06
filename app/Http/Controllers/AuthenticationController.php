@@ -36,6 +36,34 @@ class AuthenticationController extends Controller
         );
     }
 
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $otp = '123456';
+
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ]);
+        }
+
+        $user->email_verified_code = $otp;
+        $user->save();
+
+        // send email code
+
+        return $this->successResponse(
+            $user,
+            'OTP sent to email'
+        );
+    }
+
     // Verify Email OTP
     public function verifyEmailOtp(Request $request)
     {
@@ -66,6 +94,7 @@ class AuthenticationController extends Controller
             'message' => 'Email verified successfully',
         ]);
     }
+    
 
     // Send Mobile OTP
     public function sendMobileOtp(Request $request)
@@ -83,6 +112,34 @@ class AuthenticationController extends Controller
 
         // Here you integrate SMS / WhatsApp API
         // Example: Twilio, Vonage, WhatsApp API
+
+        return $this->successResponse(
+            $user,
+            'OTP sent to mobile'
+        );
+    }
+
+     public function verifyMobile(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required',
+        ]);
+
+        $otp = '123456';
+
+        $user = User::where('mobile', $request->mobile)->first();
+        
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ]);
+        }
+
+        $user->mobile_verified_code = $otp;
+        $user->save();
+
+        // send email code
 
         return $this->successResponse(
             $user,
@@ -201,6 +258,39 @@ class AuthenticationController extends Controller
                 'token' => $token,
                 'user' => $user,
             ],
+        ]);
+    }
+
+    public function mobileLogin(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required',
+            'otp' => 'required',
+        ]);
+
+        $user = User::where('mobile', $request->mobile)
+            ->where('mobile_verified_code', $request->otp)
+            ->first();
+
+        if (! $user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid OTP',
+            ]);
+        }
+
+        $user->update([
+            'mobile_verified_at' => now(),
+            'mobile_verified_code' => null,
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'status' => true,
+            'token' => $token,
+            'data' => $user->id,
+            'message' => 'Mobile verified successfully',
         ]);
     }
 
