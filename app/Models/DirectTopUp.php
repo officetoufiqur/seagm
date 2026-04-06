@@ -15,4 +15,11 @@ class DirectTopUp extends Model
     {
         return $this->hasMany(TopUpItem::class, 'api_category_id', 'api_id');
     }
+
+    public function topUpReviews()
+    {
+        return $this->hasMany(TopUpReview::class, 'card_api_id', 'api_id');
+    }
+
+    
 }

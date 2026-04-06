@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DirectTopUpApiController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TermsController;
+use App\Http\Controllers\TopUpReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +61,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/card-items/{id}/reviews', 'store');
     });
 
+    Route::controller(TopUpReviewController::class)->group(function () {
+        Route::post('/direct-top-up/{id}/reviews', 'store');
+    });
+
     Route::post('/hitpay/payment', [HitPayController::class, 'hitpay']);
 
     Route::controller(UserProfileController::class)->group(function () {
@@ -80,9 +86,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');
 
 Route::get('/card-items/{id}/reviews', [ReviewController::class, 'index']);
+Route::get('/direct-top-up/{id}/reviews', [TopUpReviewController::class, 'index']);
 Route::post('/payment/ipn', [SkrillController::class, 'ipn']);
 
 Route::get('/cards', [CardApiController::class, 'index']);
 Route::get('/cards/{id}', [CardApiController::class, 'show']);
+
+Route::get('/direct-top-up', [DirectTopUpApiController::class, 'index']);
+Route::get('/direct-top-up/{id}', [DirectTopUpApiController::class, 'show']);
 
 Route::get('/terms', [TermsController::class, 'terms']);
