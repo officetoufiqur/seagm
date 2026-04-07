@@ -21,6 +21,8 @@ class CardApiController extends Controller
                 $q->where('status', 'completed')
                     ->where('product_type', \App\Models\Card::class);
             }], 'quantity')
+                ->withAvg('reviews as avg_rating', 'rating')
+                ->withCount('reviews as total_reviews')
                 ->orderByDesc('total_sold')
                 ->take(6)
                 ->get();

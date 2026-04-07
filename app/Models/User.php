@@ -96,4 +96,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(TopUpReview::class);
     }
+
+    public function userCards()
+    {
+        return $this->hasMany(UserCard::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }

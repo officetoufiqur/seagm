@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use App\Models\CardItem;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -156,6 +157,18 @@ class PaypalWebhookController extends Controller
                     $payment->update([
                         'payment_status' => $allSuccess ? 'paid' : 'failed'
                     ]);
+
+                    if ($payment->status === 'paid') {
+                        $year = date('Y');
+                        $invoiceNumber = 'INV-' . $year . '-' . str_pad($payment->id, 3, '0', STR_PAD_LEFT);
+                        Invoice::create([
+                            'user_id' => $userId,
+                            'payment_id' => $payment->id,
+                            'invoice_number' => $invoiceNumber,
+                            'amount' => $payment->amount,
+                            'status' => 'paid',
+                        ]);
+                    }
 
                     break;
 

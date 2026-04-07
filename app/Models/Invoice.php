@@ -4,19 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Invoice extends Model
 {
-    protected $table = 'orders';
-
     protected $fillable = [
         'user_id',
-        'product_type',
-        'product_id',
-        'api_id',
-        'quantity',
-        'total_price',
+        'payment_id',
+        'invoice_number',
+        'amount',
         'status',
-        'meta',
     ];
 
     public function user()
@@ -24,8 +19,8 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function product()
+    public function payment()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Payment::class);
     }
 }

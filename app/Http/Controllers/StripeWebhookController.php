@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 // use App\Helpers\SeagmHelper;
 use App\Models\Card;
 use App\Models\CardItem;
+use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\UserCard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -90,18 +92,7 @@ class StripeWebhookController extends Controller
 
                             $totalPrice = $res->unit_price * $item['quantity'];
 
-                            // Create order
-                            Order::create([
-                                'user_id' => $userId,
-                                'product_type' => Card::class,
-                                'product_id' => $card->id,
-                                'api_id' => $item['card_id'],
-                                'quantity' => $item['quantity'],
-                                'total_price' => $totalPrice,
-                                'status' => 'completed',
-                                // 'meta' => json_encode($cards) seagm response data
-                            ]);
-
+                            
                             // $seagmResponse = SeagmHelper::post('v1/card-orders', [
                             //     'type_id' => $item['id'],
                             //     'buy_amount' => $item['quantity'],
@@ -111,7 +102,29 @@ class StripeWebhookController extends Controller
                             //     throw new \Exception('SEAGM failed: '.json_encode($seagmResponse));
                             // }
 
-                            // $cards = $seagmResponse['data']['cards'];
+                            // $seagmCards = $seagmResponse['data']['cards'];
+
+                            // Create order
+                            Order::create([
+                                'user_id' => $userId,
+                                'product_type' => Card::class,
+                                'product_id' => $card->id,
+                                'api_id' => $item['card_id'],
+                                'quantity' => $item['quantity'],
+                                'total_price' => $totalPrice,
+                                'status' => 'completed',
+                                // 'meta' => json_encode($seagmCards)
+                            ]);
+
+                            // foreach ($seagmCards as $seagmCard) {
+                            //     UserCard::create([
+                            //         'user_id' => $userId,
+                            //         'api_id' => $seagmCard['id'],
+                            //         'card_number' => $seagmCard['card_number'],
+                            //         'card_pin' => $seagmCard['card_pin'],
+                            //         'expired' => $seagmCard['expired_at'] ?? null,
+                            //     ]);
+                            // }
 
                         } catch (\Exception $e) {
                             $allSuccess = false;
@@ -122,6 +135,18 @@ class StripeWebhookController extends Controller
                     $payment->update([
                         'status' => $allSuccess ? 'paid' : 'failed',
                     ]);
+
+                    if ($payment->status === 'paid') {
+                        $year = date('Y');
+                        $invoiceNumber = 'INV-' . $year . '-' . str_pad($payment->id, 3, '0', STR_PAD_LEFT);
+                        Invoice::create([
+                            'user_id' => $userId,
+                            'payment_id' => $payment->id,
+                            'invoice_number' => $invoiceNumber,
+                            'amount' => $payment->amount,
+                            'status' => 'paid',
+                        ]);
+                    }
                 });
 
                 break;

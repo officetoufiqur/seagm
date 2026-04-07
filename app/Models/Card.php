@@ -43,4 +43,9 @@ class Card extends Model
     {
         return $this->morphMany(Order::class, 'product');
     }
+
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
 }

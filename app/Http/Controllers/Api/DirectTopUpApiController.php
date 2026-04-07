@@ -17,10 +17,20 @@ class DirectTopUpApiController extends Controller
 
             $topups = DirectTopUp::get();
 
+            // $popular = DirectTopUp::withSum(['orders as total_sold' => function ($q) {
+            //     $q->where('status', 'completed')
+            //         ->where('product_type', \App\Models\DirectTopUp::class);
+            // }], 'quantity')
+            //     ->orderByDesc('total_sold')
+            //     ->take(6)
+            //     ->get();
+
             $popular = DirectTopUp::withSum(['orders as total_sold' => function ($q) {
                 $q->where('status', 'completed')
                     ->where('product_type', \App\Models\DirectTopUp::class);
             }], 'quantity')
+                ->withAvg('topUpReviews as avg_rating', 'rating')
+                ->withCount('topUpReviews as total_reviews')
                 ->orderByDesc('total_sold')
                 ->take(6)
                 ->get();
@@ -38,7 +48,7 @@ class DirectTopUpApiController extends Controller
     {
         $topup = DirectTopUp::with('items')->where('api_id', $id)->first();
 
-        if (!$topup) {
+        if (! $topup) {
             return $this->errorResponse('Direct top-up not found.', 404);
         }
 

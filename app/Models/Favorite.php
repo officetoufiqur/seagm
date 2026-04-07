@@ -4,19 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Favorite extends Model
 {
-    protected $table = 'orders';
+    protected $table = 'favorites';
 
     protected $fillable = [
         'user_id',
-        'product_type',
-        'product_id',
+        'favoritable_id',
+        'favoritable_type',
         'api_id',
-        'quantity',
-        'total_price',
-        'status',
-        'meta',
     ];
 
     public function user()
@@ -24,7 +20,7 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function product()
+    public function favoritable()
     {
         return $this->morphTo();
     }

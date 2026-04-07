@@ -67,14 +67,19 @@ class StripePaymentController extends Controller
             ];
         }
 
+        $itemsData =[
+            'items' => $request->items,
+            'total' => $total,
+            'type' => 'card',
+        ];
+
         $session = Session::create([
             'mode' => 'payment',
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'metadata' => [
                 'user_id' => Auth::id(),
-                'items' => json_encode($request->items),
-                'total' => $total,
+                'items' => json_encode($itemsData)
             ],
             'success_url' => "https://seagm.netlify.app/payment-success",
             'cancel_url' => config('app.url').'/payment-cancel',
@@ -89,7 +94,7 @@ class StripePaymentController extends Controller
             'currency' => $currency,
             'payment_method' => 'stripe',
             'status' => 'pending',
-            'items' => $request->items,
+            'items' => $itemsData,
         ]);
 
         return response()->json([

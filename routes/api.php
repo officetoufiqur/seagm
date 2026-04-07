@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DirectTopUpApiController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
@@ -85,7 +86,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/dashboard/overview', 'overview');
         Route::get('/my-orders', 'myOrders');
+        Route::get('/my-cards', 'mycards');
     });
+    Route::controller(FavoriteController::class)->group(function () {
+        Route::post('/favorites', 'store');
+        Route::get('/favorites', 'index');
+    });
+
+    Route::get('/invoices', [DashboardController::class, 'invoices']);
 });
 
 Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');
