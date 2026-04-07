@@ -90,7 +90,7 @@ function deleteCategory(id: number) {
 
                 <template #action="{ item }">
                     <div class="flex items-center gap-2">
-                        <Link :href="`/card-categories/edit/${item.id}`"
+                        <Link :href="`/card/edit/${item.id}`"
                             class="bg-[#0AB39C] text-sm cursor-pointer text-white rounded font-medium hover:bg-[#0AB39C] py-2 px-3">
                             <SquarePenIcon class="w-4.5 h-4.5" />
                         </Link>

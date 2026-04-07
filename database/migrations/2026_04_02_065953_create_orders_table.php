@@ -14,10 +14,16 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('card_item_id')->constrained('card_items')->cascadeOnDelete();
+
+            $table->string('product_type');
+            $table->integer('product_id');
+
+            $table->string('api_id')->nullable();
             $table->integer('quantity');
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'sending', 'completed', 'refunded'])->default('pending');
+
+            $table->enum('status', ['pending', 'completed'])->default('pending');
+
             $table->timestamps();
         });
     }

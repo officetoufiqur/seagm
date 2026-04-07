@@ -74,6 +74,7 @@ class StripePaymentController extends Controller
             'metadata' => [
                 'user_id' => Auth::id(),
                 'items' => json_encode($request->items),
+                'total' => $total,
             ],
             'success_url' => "https://seagm.netlify.app/payment-success",
             'cancel_url' => config('app.url').'/payment-cancel',

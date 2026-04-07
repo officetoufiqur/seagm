@@ -13,18 +13,32 @@ class CardApiController extends Controller
 
     public function index()
     {
-        $categories = Cache::remember('card_categories_db', 300, function () {
-            return Card::paginate(10);
+        $data = Cache::remember('cards_with_popular', 300, function () {
+
+            $cards = Card::get();
+
+            $popular = Card::withSum(['orders as total_sold' => function ($q) {
+                $q->where('status', 'completed')
+                    ->where('product_type', \App\Models\Card::class);
+            }], 'quantity')
+                ->orderByDesc('total_sold')
+                ->take(6)
+                ->get();
+
+            return [
+                'cards' => $cards,
+                'popular' => $popular,
+            ];
         });
 
-        return $this->successResponse($categories, 'Card categories retrieved successfully.');
+        return $this->successResponse($data, 'Cards + popular retrieved successfully');
     }
 
     public function show($id)
     {
         $category = Card::with('cardItems')->where('api_id', $id)->first();
 
-        if (!$category) {
+        if (! $category) {
             return $this->errorResponse('Card category not found.', 404);
         }
 

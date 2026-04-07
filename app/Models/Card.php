@@ -38,4 +38,9 @@ class Card extends Model
     {
         return $this->hasMany(Review::class, 'card_api_id', 'api_id');
     }
+
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'product');
+    }
 }

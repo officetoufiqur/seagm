@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\SeagmHelper;
 use App\Models\CardItem;
 use App\Models\Payment;
 use App\Trait\ApiResponse;

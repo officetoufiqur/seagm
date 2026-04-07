@@ -13,11 +13,25 @@ class DirectTopUpApiController extends Controller
 
     public function index()
     {
-        $topups = Cache::remember('direct_topups_db', 300, function () {
-            return DirectTopUp::paginate(10);
+        $data = Cache::remember('direct_topups_db', 300, function () {
+
+            $topups = DirectTopUp::get();
+
+            $popular = DirectTopUp::withSum(['orders as total_sold' => function ($q) {
+                $q->where('status', 'completed')
+                    ->where('product_type', \App\Models\DirectTopUp::class);
+            }], 'quantity')
+                ->orderByDesc('total_sold')
+                ->take(6)
+                ->get();
+
+            return [
+                'topups' => $topups,
+                'popular' => $popular,
+            ];
         });
 
-        return $this->successResponse($topups, 'Direct top-ups retrieved successfully.');
+        return $this->successResponse($data, 'Direct top-ups + popular retrieved successfully');
     }
 
     public function show($id)

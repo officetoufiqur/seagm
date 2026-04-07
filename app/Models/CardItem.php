@@ -38,8 +38,4 @@ class CardItem extends Model
         return $this->hasOne(ExclusiveOffer::class);
     }
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
 }

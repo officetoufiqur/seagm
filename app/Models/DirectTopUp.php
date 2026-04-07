@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class DirectTopUp extends Model
 {
     protected $fillable = [
-        'api_id', 'name', 'code', 'mode', 'region', 'auto_delivery'
+        'api_id', 'name', 'code', 'mode', 'region', 'auto_delivery',
     ];
-
 
     public function items()
     {
@@ -21,5 +20,8 @@ class DirectTopUp extends Model
         return $this->hasMany(TopUpReview::class, 'card_api_id', 'api_id');
     }
 
-    
+    public function orders()
+    {
+        return $this->morphMany(Order::class, 'product');
+    }
 }

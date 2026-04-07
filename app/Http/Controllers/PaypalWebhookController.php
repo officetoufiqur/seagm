@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
+use App\Models\CardItem;
+use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -93,21 +96,62 @@ class PaypalWebhookController extends Controller
 
                     // Update payment
                     $items = $payment->items;
+                    $userId = $payment->user_id;
 
                     $allSuccess = true;
 
-                    // foreach ($items as $item) {
+                    foreach ($items as $item) {
+                        $card = Card::where('api_id', $item['card_id'])->first();
 
-                    //     // $res = SeagmHelper::post('v1/orders', [
-                    //     //     'card_id' => $item['card_id'],
-                    //     //     'card_type_id' => $item['id'],
-                    //     //     'quantity' => $item['quantity'],
-                    //     // ]);
+                        if (! $card) {
+                            Log::error('Card not found: '.$item['card_id']);
 
-                    //     if (! isset($res['success']) || ! $res['success']) {
-                    //         $allSuccess = false;
-                    //     }
-                    // }
+                            continue;
+                        }
+                        
+                        $exists = Order::where('api_id', $item['id'])
+                            ->where('user_id', $userId)
+                            ->where('card_id', $item['card_id'])
+                            ->exists();
+
+                        if ($exists) {
+                            continue;
+                        }
+
+                        try {
+                             $res = CardItem::where('api_category_id', $item['card_id'])
+                                ->where('api_id', $item['id'])
+                                ->where('status', true)
+                                ->first();
+
+                            if (! $res) {
+                                throw new \Exception('Invalid card item');
+                            }
+
+                            $totalPrice = $res->unit_price * $item['quantity'];
+
+                            // Create order
+                            Order::create([
+                                'user_id' => $userId,
+                                'product_type' => Card::class,
+                                'product_id' => $card->id,
+                                'api_id' => $item['card_id'],
+                                'quantity' => $item['quantity'],
+                                'total_price' => $totalPrice,
+                                'status' => 'completed',
+                            ]);
+
+                            // SeagmHelper::post('v1/card-orders', [
+                            //     'type_id' => $item['id'],
+                            //     'buy_amount' => $item['quantity'],
+                            //     'mch_order_id' => $payment->transaction_id.'_'.$item['id'],
+                            // ]);
+                        
+                        } catch (\Exception $e) {
+                            $allSuccess = false;
+                            Log::error('SEAGM Order Failed: '.$e->getMessage());
+                        }
+                    }
 
                     $payment->update([
                         'payment_status' => $allSuccess ? 'paid' : 'failed'
