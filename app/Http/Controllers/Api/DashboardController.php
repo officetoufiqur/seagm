@@ -102,17 +102,24 @@ class DashboardController extends Controller
 
         $invoices = $invoices->map(function ($invoice) use ($cards) {
 
-            if ($invoice->payment && isset($invoice->payment->items['items'])) {
+            if ($invoice->payment) {
 
-                $invoice->payment->items['items'] = collect($invoice->payment->items['items'])
-                    ->map(function ($item) use ($cards) {
+                $items = $invoice->payment->items;
 
-                        return [
-                            'card_id' => $item['card_id'],
-                            'quantity' => $item['quantity'],
-                            'card' => $cards[$item['card_id']] ?? null,
-                        ];
-                    });
+                if (isset($items['items'])) {
+                    $items['items'] = collect($items['items'])
+                        ->map(function ($item) use ($cards) {
+                            return [
+                                'card_id' => $item['card_id'],
+                                'quantity' => $item['quantity'],
+                                'card' => $cards[$item['card_id']] ?? null,
+                            ];
+                        })
+                        ->values()
+                        ->toArray();
+
+                    $invoice->payment->items = $items;
+                }
             }
 
             return $invoice;

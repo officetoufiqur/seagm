@@ -37,10 +37,6 @@ class StripePaymentController extends Controller
                 return response()->json(['error' => 'Invalid card'], 400);
             }
 
-            if (! $res || $res['unit_price'] <= 0) {
-                return response()->json(['error' => 'Invalid card'], 400);
-            }
-
             // Currency check
             if (! $currency) {
                 $currency = strtolower($res['currency']);

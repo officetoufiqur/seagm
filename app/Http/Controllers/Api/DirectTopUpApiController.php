@@ -52,7 +52,7 @@ class DirectTopUpApiController extends Controller
             return $this->errorResponse('Direct top-up not found.', 404);
         }
 
-        $reviews = $topup->topUpReviews()->with('user:id,name')->latest()->get();
+        $reviews = $topup->topUpReviews()->with('user:id,name,image')->latest()->get();
         $averageRating = round($reviews->avg('rating'), 2);
 
         $topup->reviews = $reviews;

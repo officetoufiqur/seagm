@@ -44,7 +44,7 @@ class CardApiController extends Controller
             return $this->errorResponse('Card category not found.', 404);
         }
 
-        $reviews = $category->reviews()->with('user:id,name')->latest()->get();
+        $reviews = $category->reviews()->with('user:id,name,image')->latest()->get();
         $averageRating = round($reviews->avg('rating'), 2);
 
         $category->reviews = $reviews;
