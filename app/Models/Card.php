@@ -48,4 +48,9 @@ class Card extends Model
     {
         return $this->morphMany(Favorite::class, 'favoritable');
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

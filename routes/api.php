@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\CardApiController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DirectTopUpApiController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
@@ -102,6 +104,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/support', 'store');
         Route::get('/support', 'index');
     });
+
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/carts', 'index');
+        Route::post('/carts/{id}', 'store');
+    });
 });
 
 // Route::get('/invoices/download', [DashboardController::class, 'downloadInvoice']);
@@ -120,3 +127,8 @@ Route::get('/direct-top-up/{id}', [DirectTopUpApiController::class, 'show']);
 Route::get('/top-up/all-reviews/{id}', [DirectTopUpApiController::class, 'allReviews']);
 
 Route::get('/terms', [TermsController::class, 'terms']);
+
+Route::controller(NewsController::class)->group(function () {
+    Route::get('/news', 'index');
+    Route::get('/news/{id}', 'show');
+});

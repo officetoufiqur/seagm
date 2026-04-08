@@ -73,15 +73,19 @@ class DirectTopUpApiController extends Controller
             'bad' => 1,
         ];
 
-        $topup = DirectTopUp::select('id', 'api_id', 'name', 'region', 'image')->where('api_id', $id)->first();
+        $topup = DirectTopUp::select('id', 'api_id', 'name', 'region', 'image')
+            ->where('api_id', $id)
+            ->first();
 
         if (! $topup) {
             return $this->errorResponse('Direct top-up not found.', 404);
         }
 
+        // Base query
         $query = $topup->topUpReviews()
             ->with('user:id,name,image');
 
+        // Filter handling
         if ($request->has('filter') && $request->filter !== 'all') {
             $filter = strtolower($request->filter);
 
@@ -92,14 +96,25 @@ class DirectTopUpApiController extends Controller
             $query->where('rating', $ratingMap[$filter]);
         }
 
+        // Get reviews
         $reviews = $query->latest()->get();
+
+        // Summary data
         $totalReviews = $topup->topUpReviews()->count();
         $averageRating = round($topup->topUpReviews()->avg('rating'), 1);
+
+        $ratingCounts = [];
+        foreach ($ratingMap as $key => $value) {
+            $ratingCounts[$key] = $topup->topUpReviews()
+                ->where('rating', $value)
+                ->count();
+        }
 
         return $this->successResponse([
             'topup' => $topup,
             'total_reviews' => $totalReviews,
             'average_rating' => $averageRating,
+            'rating_counts' => $ratingCounts,
             'reviews' => $reviews,
         ], 'Reviews retrieved successfully.');
     }
