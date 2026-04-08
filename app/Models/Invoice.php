@@ -23,4 +23,31 @@ class Invoice extends Model
     {
         return $this->belongsTo(Payment::class);
     }
+
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function toPdf()
+    {
+        $this->load(['user', 'payment', 'items']);
+
+        $items = $this->items->map(function ($item, $index) {
+            return [
+                'no' => $index + 1,
+                'name' => $item->card->name ?? $item->name,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+                'total' => $item->total,
+            ];
+        });
+
+        return [
+            'invoice' => $this,
+            'user' => $this->user,
+            'payment' => $this->payment,
+            'items' => $items,
+        ];
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\CardItem;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\UserCard;
@@ -92,7 +93,6 @@ class StripeWebhookController extends Controller
 
                             $totalPrice = $res->unit_price * $item['quantity'];
 
-                            
                             // $seagmResponse = SeagmHelper::post('v1/card-orders', [
                             //     'type_id' => $item['id'],
                             //     'buy_amount' => $item['quantity'],
@@ -137,15 +137,41 @@ class StripeWebhookController extends Controller
                     ]);
 
                     if ($payment->status === 'paid') {
+
                         $year = date('Y');
-                        $invoiceNumber = 'INV-' . $year . '-' . str_pad($payment->id, 3, '0', STR_PAD_LEFT);
-                        Invoice::create([
+                        $invoiceNumber = 'INV-'.$year.'-'.str_pad($payment->id, 3, '0', STR_PAD_LEFT);
+
+                        $invoice = Invoice::create([
                             'user_id' => $userId,
                             'payment_id' => $payment->id,
                             'invoice_number' => $invoiceNumber,
                             'amount' => $payment->amount,
                             'status' => 'paid',
                         ]);
+
+                       
+                        foreach ($items as $item) {
+
+                            $card = Card::where('api_id', $item['card_id'])->first();
+
+                            if (! $card) {
+                                continue;
+                            }
+
+                            $cardItem = CardItem::where('api_id', $item['id'])->first();
+
+                            $price = $cardItem->unit_price ?? 0;
+                            $quantity = $item['quantity'] ?? 1;
+
+                            InvoiceItem::create([
+                                'invoice_id' => $invoice->id,
+                                'card_api_id' => $item['card_id'],
+                                'name' => $card->name,
+                                'quantity' => $quantity,
+                                'price' => $price,
+                                'total' => $price * $quantity,
+                            ]);
+                        }
                     }
                 });
 

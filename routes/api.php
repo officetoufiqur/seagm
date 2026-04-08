@@ -18,6 +18,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\TopUpReviewController;
 use Illuminate\Http\Request;
@@ -33,10 +34,10 @@ Route::controller(AuthenticationController::class)->group(function () {
 
     Route::post('/send-email-otp', 'sendEmailOtp');
     Route::post('/verify-email-otp', 'verifyEmailOtp');
-    
+
     Route::post('/send-mobile-otp', 'sendMobileOtp');
     Route::post('/verify-mobile-otp', 'verifyMobileOtp');
-    
+
     Route::post('/verify-email', 'verifyEmail');
     Route::post('/verify-mobile', 'verifyMobile');
 
@@ -77,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/profile', 'show');
         Route::post('/profile/image', 'imageUpdate');
         Route::post('/profile/username', 'usernameUpdate');
+        Route::post('/change-password/otp', 'changePasswordOtp');
         Route::post('/profile/change-password', 'changePassword');
         Route::get('/profile/billing_addresses', 'getBillingAddress');
         Route::post('/profile/billing_addresses', 'addBillingAddress');
@@ -87,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/dashboard/overview', 'overview');
         Route::get('/my-orders', 'myOrders');
         Route::get('/my-cards', 'mycards');
+        Route::get('/invoices/{invoice}/download', 'downloadInvoice');
     });
     Route::controller(FavoriteController::class)->group(function () {
         Route::post('/favorites', 'store');
@@ -94,7 +97,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/invoices', [DashboardController::class, 'invoices']);
+
+    Route::controller(SupportController::class)->group(function () {
+        Route::post('/support', 'store');
+        Route::get('/support', 'index');
+    });
 });
+
+// Route::get('/invoices/download', [DashboardController::class, 'downloadInvoice']);
 
 Route::post('/hitpay/webhook', [HitPayController::class, 'webhook'])->name('hitpay.webhook');
 
@@ -107,5 +117,6 @@ Route::get('/cards/{id}', [CardApiController::class, 'show']);
 
 Route::get('/direct-top-up', [DirectTopUpApiController::class, 'index']);
 Route::get('/direct-top-up/{id}', [DirectTopUpApiController::class, 'show']);
+Route::get('/top-up/all-reviews/{id}', [DirectTopUpApiController::class, 'allReviews']);
 
 Route::get('/terms', [TermsController::class, 'terms']);

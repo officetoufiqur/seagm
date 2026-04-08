@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CardController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\TermsController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -25,6 +27,41 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+Route::get('/dump-autoload', function () {
+    exec('composer dump-autoload');
+    return 'Composer autoload dumped!';
+});
+
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+
+    return 'Cache cleared successfully!';
+});
+
+Route::get('/run-schedule', function () {
+    Artisan::call('send:expires-reminder'); 
+    Artisan::call('send:check-medical-proof');
+    Artisan::call('app:task-overdue');
+    Artisan::call('company:renewal-status');
+    Artisan::call('app:installment');
+    return 'Schedule run successfully!';
+});
+
+Route::get('/storage-link', function () {
+    $target = storage_path('app/public');
+    $link = '/home/dwbcdckj/damac.dwbc-bh.com/storage';
+
+    if (file_exists($link)) {
+        return 'Symlink already exists.';
+    }
+
+    symlink($target, $link);
+    return 'Symlink created successfully.';
+});
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
@@ -140,6 +177,9 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+Route::get('/invoices/{invoice}/download', [DashboardController::class, 'downloadInvoice']);
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/command.php';

@@ -66,10 +66,38 @@ class UserProfileController extends Controller
         return $this->successResponse($user, 'Username updated successfully');
     }
 
+    public function changePasswordOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required_without:mobile|email',
+            'mobile' => 'required_without:email',
+        ]);
+
+        $user = Auth::user();
+
+        if (! $user) {
+            return $this->errorResponse('User not found', 404);
+        }
+
+        if ($request->email) {
+            $user->email_verified_code = '123456';
+            $user->save();
+
+            return $this->successResponse(null, 'OTP sent to email successfully');
+        } else {
+            $user->mobile_verified_code = '123456';
+            $user->save();
+
+            return $this->successResponse(null, 'OTP sent to mobile successfully');
+        }
+    }
+
     public function changePassword(Request $request)
     {
         $request->validate([
             'otp' => 'required',
+            'email' => 'required_without:mobile|email',
+            'mobile' => 'required_without:email',
             'password' => [
                 'required',
                 'string',
@@ -94,7 +122,8 @@ class UserProfileController extends Controller
                 'email_verified_code' => null,
                 'password' => Hash::make($request->password),
             ]);
-        } else {
+        } elseif ($request->mobile) {
+
             if ($user->mobile_verified_code !== $request->otp) {
                 return $this->errorResponse('Invalid OTP', 400);
             }
@@ -118,13 +147,8 @@ class UserProfileController extends Controller
 
         $billingAddress = BillingAddress::where('user_id', $user->id)->first();
 
-        if (! $billingAddress) {
-            return $this->errorResponse('Billing address not found', 404);
-        }
-
         return $this->successResponse($billingAddress, 'Billing address retrieved successfully');
     }
-
 
     public function addBillingAddress(Request $request)
     {
@@ -145,18 +169,18 @@ class UserProfileController extends Controller
         }
 
         $billingAddress = BillingAddress::updateOrCreate(
-        [
-            'user_id' => $user->id,
-        ],    
-        [
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-        ]);
+            [
+                'user_id' => $user->id,
+            ],
+            [
+                'fname' => $request->fname,
+                'lname' => $request->lname,
+                'address' => $request->address,
+                'zip_code' => $request->zip_code,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+            ]);
 
         $billingAddress->save();
 
@@ -175,6 +199,4 @@ class UserProfileController extends Controller
 
         return $this->successResponse(null, 'Account deleted successfully');
     }
-
-    
 }

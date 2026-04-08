@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DirectTopUp extends Model
 {
     protected $fillable = [
-        'api_id', 'name', 'code', 'mode', 'region', 'auto_delivery',
+        'api_id', 'name', 'code', 'mode', 'region', 'auto_delivery', 'description', 'image'
     ];
 
     public function items()

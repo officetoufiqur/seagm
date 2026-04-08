@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Card;
+use App\Models\Invoice;
 use App\Trait\ApiResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -85,46 +86,30 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $invoices = $user->invoices()
-            ->with('payment')
+            ->with('payment', 'items')
             ->latest()
             ->get();
 
-        $cardIds = collect($invoices)
-            ->pluck('payment.items.items')
-            ->flatten(1)
-            ->pluck('card_id')
-            ->filter()
-            ->unique();
-
-        $cards = Card::whereIn('api_id', $cardIds)
-            ->get()
-            ->keyBy('api_id');
-
-        $invoices = $invoices->map(function ($invoice) use ($cards) {
-
-            if ($invoice->payment) {
-
-                $items = $invoice->payment->items;
-
-                if (isset($items['items'])) {
-                    $items['items'] = collect($items['items'])
-                        ->map(function ($item) use ($cards) {
-                            return [
-                                'card_id' => $item['card_id'],
-                                'quantity' => $item['quantity'],
-                                'card' => $cards[$item['card_id']] ?? null,
-                            ];
-                        })
-                        ->values()
-                        ->toArray();
-
-                    $invoice->payment->items = $items;
-                }
-            }
-
-            return $invoice;
-        });
-
         return $this->successResponse($invoices, 'My invoices retrieved successfully');
+    }
+
+    public function downloadInvoice($id)
+    {
+        $user = Auth::user();
+
+        $invoice = Invoice::find($id);
+
+        if (! $invoice || $invoice->user_id !== $user->id) {
+            return $this->errorResponse('Invoice not found', 404);
+        }
+
+        $data = $invoice->toPdf();
+
+
+        $filename = 'invoice-'.($invoice->invoice_number ?? $invoice->id).'.pdf';
+
+        $pdf = Pdf::loadView('pdf.invoice', $data);
+
+        return $pdf->download($filename);
     }
 }

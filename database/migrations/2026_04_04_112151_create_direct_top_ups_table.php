@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('mode'); 
             $table->string('region');
             $table->boolean('auto_delivery')->default(false);
+            $table->longText('description')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
