@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DirectTopUp;
+use App\Models\News;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -59,6 +60,13 @@ class DirectTopUpApiController extends Controller
         $topup->reviews = $reviews->take(6);
         $topup->average_rating = $averageRating;
         $topup->total_reviews = $reviews->count();
+
+        $relatedCards = DirectTopUp::latest()->take(6)->get();
+        $promotions = News::select('id', 'title', 'image')->latest()->take(6)->get();
+
+        $topup->promotions = $promotions;
+
+        $topup->related_cards = $relatedCards;
 
         return $this->successResponse($topup, 'Direct top-up retrieved successfully.');
     }

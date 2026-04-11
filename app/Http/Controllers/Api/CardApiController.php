@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Card;
+use App\Models\News;
 use App\Trait\ApiResponse;
 use Illuminate\Support\Facades\Cache;
 
@@ -50,6 +51,13 @@ class CardApiController extends Controller
         $category->reviews = $reviews;
         $category->average_rating = $averageRating;
         $category->total_reviews = $reviews->count();
+
+        $relatedCards = Card::latest()->take(6)->get();
+        $promotions = News::select('id', 'title', 'image')->latest()->take(6)->get();
+
+        $category->promotions = $promotions;
+
+        $category->related_cards = $relatedCards;
 
         return $this->successResponse($category, 'Card category retrieved successfully.');
     }
