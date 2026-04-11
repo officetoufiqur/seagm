@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supports', function (Blueprint $table) {
+        Schema::create('support_messages', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('support_id')->constrained('supports')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('receiver_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('subject');
-            $table->text('question');
-            $table->enum('status', ['open', 'closed'])->default('open');
+
+            $table->text('message');
+            $table->string('attachment')->nullable();
+
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supports');
+        Schema::dropIfExists('support_messages');
     }
 };

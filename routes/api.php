@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DashboardController;
@@ -103,8 +104,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invoices', [DashboardController::class, 'invoices']);
 
     Route::controller(SupportController::class)->group(function () {
-        Route::post('/support', 'store');
-        Route::get('/support', 'index');
+        Route::get('/supports', 'index');
+        Route::post('/supports', 'store');
+        Route::get('/supports/{id}', 'show');
+        Route::post('/supports/{id}/reply', 'replyStore');
     });
 
     Route::controller(CartController::class)->group(function () {
@@ -144,3 +147,4 @@ Route::controller(NewsApiController::class)->group(function () {
 });
 
 Route::post('/newsletter', [NewsLetterController::class, 'store']);
+Route::get('/about-us', [AboutUsController::class, 'show']);

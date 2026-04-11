@@ -14,9 +14,13 @@ class SupportController extends Controller
 
     public function index()
     {
-        $supports = Auth::user()->supports()->latest()->get();
+        $supports = Auth::user()
+            ->supports()
+            ->with(['messages' => fn ($q) => $q->latest()->limit(1)])
+            ->latest()
+            ->get();
 
-        return $this->successResponse($supports, 'Support tickets retrieved successfully');
+        return $this->successResponse($supports, 'All tickets');
     }
 
     public function store(Request $request)
@@ -38,10 +42,55 @@ class SupportController extends Controller
             'user_id' => Auth::id(),
             'subject' => $request->subject,
             'question' => $request->question,
-            'description' => $request->description,
+        ]);
+
+        $support->messages()->create([
+            'user_id' => Auth::id(),
+            'message' => $request->message,
             'attachment' => $file,
         ]);
 
         return $this->successResponse($support, 'Support ticket created successfully');
+    }
+
+    public function show($id)
+    {
+        $support = Support::with(['messages.user:id,name,image'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return $this->successResponse($support, 'Ticket details');
+    }
+
+    public function replyStore(Request $request, $id)
+    {
+        $request->validate([
+            'message' => 'required|string',
+            'attachment' => 'nullable|file|max:2048',
+        ]);
+
+        $support = Support::findOrFail($id);
+
+        $file = null;
+
+        if ($request->hasFile('attachment')) {
+            $file = FileUpload::storeFile($request->file('attachment'), 'uploads/supports');
+        }
+
+        $message = $support->messages()->create([
+            'user_id' => Auth::id(),
+            'message' => $request->message,
+            'attachment' => $file,
+        ]);
+
+
+        if (! $support->receiver_id && Auth::id() !== $support->user_id) {
+            $support->update([
+                'receiver_id' => Auth::id(),
+                'status' => 'in_progress',
+            ]);
+        }
+
+        return $this->successResponse($message, 'Reply sent');
     }
 }
