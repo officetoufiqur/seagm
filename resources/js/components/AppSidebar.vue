@@ -37,6 +37,11 @@ const mainNavItems: NavItem[] = [
         icon: NewspaperIcon,
     },
     {
+        title: 'News Videos',
+        href: '/news-videos',
+        icon: NewspaperIcon,
+    },
+    {
         title: 'Exclusive offers',
         href: '/exclusive-offers',
         icon: BadgePercentIcon

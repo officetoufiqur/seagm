@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use App\Models\Coupon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,29 +12,50 @@ class CouponController extends Controller
 {
     public function couponDetails($id)
     {
-        $coupon = Coupon::with('card:id,name,code,image')->find($id);
+        $coupon = Coupon::with('card:id,api_id,name,code,image,region')->find($id);
 
-        if (!$coupon) {
+        if (! $coupon) {
             return response()->json([
-                'message' => 'Coupon not found.'
+                'message' => 'Coupon not found.',
             ], 404);
         }
 
         $totalCoupons = $coupon->total_coupons;
         $claimedCoupons = $coupon->claimed_count;
 
-        $couponUsedPercent = $totalCoupons > 0 ? round(($claimedCoupons / $totalCoupons) * 100, 2) : 0;
+        $couponUsedPercent = $totalCoupons > 0
+            ? round(($claimedCoupons / $totalCoupons) * 100, 2)
+            : 0;
 
-        return response()->json([
+        $now = now();
+        $validTo = Carbon::parse($coupon->valid_to);
+
+        $expired = $now->greaterThan($validTo);
+
+        if ($expired) {
+            $remaining = 'Expired';
+        } else {
+            $diff = $now->diff($validTo);
+
+            $remaining = [
+                'd' => $diff->d,
+                'h' => $diff->h,
+            ];
+        }
+
+        $data = [
             'coupon' => $coupon,
-            'used_percent' => $couponUsedPercent
-        ]);
+            'used_percent' => $couponUsedPercent,
+            'remaining_time' => $remaining,
+        ];
+
+        return response()->json($data);
     }
 
     public function index()
     {
         $coupons = Coupon::all();
-        
+
         return Inertia::render('Coupons/Index', [
             'coupons' => $coupons,
         ]);
@@ -42,8 +64,9 @@ class CouponController extends Controller
     public function create()
     {
         $cards = Card::select('id', 'name')->get();
+
         return Inertia::render('Coupons/Create', [
-            'cards' => $cards
+            'cards' => $cards,
         ]);
     }
 
@@ -68,7 +91,7 @@ class CouponController extends Controller
             'total_coupons' => $request->total_coupons,
             'valid_from' => $request->valid_from,
             'valid_to' => $request->valid_to,
-            'terms' => $request->terms 
+            'terms' => $request->terms,
         ]);
 
         return redirect()->route('coupons.index')->with('message', 'Coupon created successfully.');
@@ -81,7 +104,7 @@ class CouponController extends Controller
 
         return Inertia::render('Coupons/Edit', [
             'coupon' => $coupon,
-            'cards' => $cards
+            'cards' => $cards,
         ]);
     }
 
@@ -108,7 +131,7 @@ class CouponController extends Controller
             'total_coupons' => $request->total_coupons,
             'valid_from' => $request->valid_from,
             'valid_to' => $request->valid_to,
-            'terms' => $request->terms 
+            'terms' => $request->terms,
         ]);
 
         return redirect()->route('coupons.index')->with('message', 'Coupon updated successfully.');

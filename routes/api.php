@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
+use App\Http\Controllers\Api\NewsLetterController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
@@ -137,4 +138,9 @@ Route::controller(NewsController::class)->group(function () {
 Route::controller(NewsApiController::class)->group(function () {
     Route::get('/home-page/news', 'newsHome');
     Route::get('/news/latest', 'latestNews');
+    Route::get('/gaming/news/category', 'gamingNewsByCategory');
+    Route::get('/guide/category', 'guideCategory');
+    Route::get('/news/category/details', 'newsCategoryDetails');
 });
+
+Route::post('/newsletter', [NewsLetterController::class, 'store']);

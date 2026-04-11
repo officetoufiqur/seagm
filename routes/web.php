@@ -12,6 +12,7 @@ use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsVideoController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
@@ -174,6 +175,15 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(MobileRechargeController::class)->group(function () {
         Route::get('/mobile-recharge', 'index')->name('mobile-recharge.index');
+    });
+
+    Route::controller(NewsVideoController::class)->group(function () {
+        Route::get('/news-videos', 'index')->name('news-videos.index');
+        Route::get('/news-videos/create', 'create')->name('news-videos.create');
+        Route::post('/news-videos/store', 'store')->name('news-videos.store');
+        Route::get('/news-videos/edit/{id}', 'edit')->name('news-videos.edit');
+        Route::post('/news-videos/update/{id}', 'update')->name('news-videos.update');
+        Route::delete('/news-videos/{id}', 'destroy')->name('news-videos.destroy');
     });
 
 });

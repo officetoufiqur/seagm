@@ -20,7 +20,7 @@ class HomeController extends Controller
         $coupons = Coupon::with('card:id,name,code,image')->where('is_active', true)->get();
         $banners = Banner::where('status', 1)->get();
         $news = News::with('category:id,name', 'author:id,name')->where('status', 1)->get();
-        $offers = ExclusiveOffer::where('is_active', 1)->get();
+        $offers = ExclusiveOffer::with('cardItem')->where('is_active', 1)->get();
 
         $data = [
             'banners' => $banners,
