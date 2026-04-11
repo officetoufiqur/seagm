@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DirectTopUpApiController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CouponController;
@@ -131,4 +132,9 @@ Route::get('/terms', [TermsController::class, 'terms']);
 Route::controller(NewsController::class)->group(function () {
     Route::get('/news', 'index');
     Route::get('/news/{id}', 'show');
+});
+
+Route::controller(NewsApiController::class)->group(function () {
+    Route::get('/home-page/news', 'newsHome');
+    Route::get('/news/latest', 'latestNews');
 });
