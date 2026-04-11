@@ -64,6 +64,20 @@ const mainNavItems: NavItem[] = [
         title: 'Terms & Conditions',
         href: '/terms',
         icon: ScrollTextIcon,
+    },
+    {
+        title: 'About',
+        icon: ScrollTextIcon,
+        subMenu: [
+            {
+                title: 'About Us',
+                href: '/about-us',
+            },
+            {
+                title: 'Vision',
+                href: '/vision',
+            },
+        ]
     }
 
 

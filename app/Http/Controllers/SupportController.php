@@ -56,7 +56,10 @@ class SupportController extends Controller
     public function show($id)
     {
         $support = Support::with(['messages.user:id,name,image'])
-            ->where('user_id', Auth::id())
+            ->where(function ($q) {
+                $q->where('user_id', Auth::id())
+                    ->orWhere('receiver_id', Auth::id());
+            })
             ->findOrFail($id);
 
         return $this->successResponse($support, 'Ticket details');
@@ -82,7 +85,6 @@ class SupportController extends Controller
             'message' => $request->message,
             'attachment' => $file,
         ]);
-
 
         if (! $support->receiver_id && Auth::id() !== $support->user_id) {
             $support->update([

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
 use App\Http\Controllers\BannerController;
@@ -184,6 +185,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/news-videos/edit/{id}', 'edit')->name('news-videos.edit');
         Route::post('/news-videos/update/{id}', 'update')->name('news-videos.update');
         Route::delete('/news-videos/{id}', 'destroy')->name('news-videos.destroy');
+    });
+
+    Route::controller(AboutUsController::class)->group(function () {
+        Route::get('/about-us', 'index')->name('about-us.index');
+        Route::get('/about-us/edit/{id}', 'edit')->name('about-us.edit');
+        Route::post('/about-us/update/{id}', 'update')->name('about-us.update');
+
+        Route::get('/vision', 'vision')->name('vision.index');
+        Route::get('/vision/edit/{id}', 'visionEdit')->name('vision.edit');
+        Route::post('/vision/update/{id}', 'visionUpdate')->name('vision.update');
     });
 
 });
