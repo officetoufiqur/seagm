@@ -6,11 +6,14 @@ use App\Http\Controllers\Api\MobileRechargeController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardItemController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DirectTopUpController;
+use App\Http\Controllers\EmployeeBenefitController;
 use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
+use App\Http\Controllers\JoinUsController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsVideoController;
@@ -207,6 +210,30 @@ Route::middleware('auth')->group(function () {
         Route::get('/platform', 'index')->name('platform.index');
         Route::get('/platform/edit/{id}', 'edit')->name('platform.edit');
         Route::post('/platform/update/{id}', 'update')->name('platform.update');
+    });
+
+     Route::controller(CareerController::class)->group(function () {
+        Route::get('/careers', 'index')->name('careers.index');
+        Route::get('/careers/edit/{id}', 'edit')->name('careers.edit');
+        Route::post('/careers/update/{id}', 'update')->name('careers.update');
+    });
+
+    Route::controller(EmployeeBenefitController::class)->group(function () {
+        Route::get('/employee-benefits', 'index')->name('employee-benefits.index');
+        Route::get('/employee-benefits/create', 'create')->name('employee-benefits.create');
+        Route::post('/employee-benefits/store', 'store')->name('employee-benefits.store');
+        Route::get('/employee-benefits/edit/{id}', 'edit')->name('employee-benefits.edit');
+        Route::post('/employee-benefits/update/{id}', 'update')->name('employee-benefits.update');
+        Route::delete('/employee-benefits/destroy/{id}', 'destroy')->name('employee-benefits.destroy');
+    });
+
+    Route::controller(JoinUsController::class)->group(function () {
+        Route::get('/join-us', 'index')->name('join-us.index');
+        Route::get('/join-us/create', 'create')->name('join-us.create');
+        Route::post('/join-us/store', 'store')->name('join-us.store');
+        Route::get('/join-us/edit/{id}', 'edit')->name('join-us.edit');
+        Route::post('/join-us/update/{id}', 'update')->name('join-us.update');
+        Route::delete('/join-us/destroy/{id}', 'destroy')->name('join-us.destroy');
     });
 
 });

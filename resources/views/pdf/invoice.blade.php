@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <title>Invoice</title>
+    <title>Bulk Invoice</title>
 
     <style>
         body {
@@ -51,7 +52,6 @@
             color: #fff;
             padding: 8px;
             text-align: center;
-            letter-spacing: 0.5px;
         }
 
         .table td {
@@ -59,12 +59,13 @@
             border-bottom: 1px solid #ddd;
         }
 
-        .table tr:nth-child(even) {
-            background: #f4f7fb;
+        .text-center {
+            text-align: center;
         }
 
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
+        .text-right {
+            text-align: right;
+        }
 
         .total-table {
             width: 100%;
@@ -73,7 +74,6 @@
 
         .total-table td {
             padding: 6px;
-            font-size: 13px;
         }
 
         .grand-total {
@@ -81,7 +81,6 @@
             color: #fff;
             padding: 8px;
             font-weight: bold;
-            font-size: 14px;
         }
 
         .footer {
@@ -98,112 +97,114 @@
 
 <body>
 
-@php
-    $invoiceNumber = $invoice->invoice_number ?? $invoice->id;
-    $invoiceDate = optional($invoice->created_at)->format('d M Y');
-    $customerName = $user->name ?? 'Customer';
-    $customerEmail = $user->email ?? '';
-    $paymentMethod = $payment->payment_method ?? 'N/A';
+    @foreach ($invoices as $data)
+        @php
+            $invoice = $data['invoice'];
+            $user = $data['user'];
+            $payment = $data['payment'];
+            $items = $data['items'];
 
-    $subTotal = collect($items)->sum('total');
-    $taxAmount = 0;
-    $grandTotal = $invoice->amount ?? $subTotal;
-@endphp
+            $invoiceNumber = $invoice->invoice_number ?? $invoice->id;
+            $invoiceDate = optional($invoice->created_at)->format('d M Y');
+            $customerName = $user->name ?? 'Customer';
+            $customerEmail = $user->email ?? '';
+            $paymentMethod = $payment->payment_method ?? 'N/A';
 
-<!-- Header -->
-<table class="header-table">
-    <tr>
-        <td>
-            <strong style="font-size:18px;">Your Company</strong><br>
-            <small>your@email.com</small>
-        </td>
-        <td class="title">INVOICE</td>
-    </tr>
-</table>
+            $subTotal = collect($items)->sum('total');
+            $taxAmount = 0;
+            $grandTotal = $invoice->amount ?? $subTotal;
+        @endphp
 
-<div class="line"></div>
-
-<!-- Info -->
-<table class="info-table">
-    <tr>
-        <td>
-            <strong>Invoice To:</strong><br><br>
-            <strong>{{ $customerName }}</strong><br>
-            {{ $customerEmail }}
-        </td>
-
-        <td class="invoice-details">
-            <strong>Invoice #:</strong> {{ $invoiceNumber }}<br>
-            <strong>Date:</strong> {{ $invoiceDate }}<br>
-            <strong>Payment:</strong> {{ ucfirst($paymentMethod) }}
-        </td>
-    </tr>
-</table>
-
-<!-- Items Table -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>NO</th>
-            <th>DESCRIPTION</th>
-            <th>QTY</th>
-            <th>PRICE</th>
-            <th>TOTAL</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($items as $item)
+        <!-- Header -->
+        <table class="header-table">
             <tr>
-                <td class="text-center">{{ $item['no'] }}</td>
                 <td>
-                    <strong>{{ $item['name'] }}</strong>
+                    <strong style="font-size:18px;">Your Company</strong><br>
+                    <small>your@email.com</small>
                 </td>
-                <td class="text-center">{{ $item['quantity'] }}</td>
-                <td class="text-right">${{ number_format($item['price'], 2) }}</td>
-                <td class="text-right">${{ number_format($item['total'], 2) }}</td>
+                <td class="title">INVOICE</td>
             </tr>
-        @empty
+        </table>
+
+        <div class="line"></div>
+
+        <!-- Info -->
+        <table class="info-table">
             <tr>
-                <td colspan="5" class="text-center">No items found</td>
+                <td>
+                    <strong>Invoice To:</strong><br><br>
+                    <strong>{{ $customerName }}</strong><br>
+                    {{ $customerEmail }}
+                </td>
+
+                <td class="invoice-details">
+                    <strong>Invoice #:</strong> {{ $invoiceNumber }}<br>
+                    <strong>Date:</strong> {{ $invoiceDate }}<br>
+                    <strong>Payment:</strong> {{ ucfirst($paymentMethod) }}
+                </td>
             </tr>
-        @endforelse
-    </tbody>
-</table>
+        </table>
 
-<!-- Totals -->
-<table class="total-table">
-    <tr>
-        <td class="text-right">Sub Total:</td>
-        <td class="text-right">${{ number_format($subTotal, 2) }}</td>
-    </tr>
+        <!-- Items -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>DESCRIPTION</th>
+                    <th>QTY</th>
+                    <th>PRICE</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($items as $item)
+                    <tr>
+                        <td class="text-center">{{ $item['no'] }}</td>
+                        <td>{{ $item['name'] }}</td>
+                        <td class="text-center">{{ $item['quantity'] }}</td>
+                        <td class="text-right">${{ number_format($item['price'], 2) }}</td>
+                        <td class="text-right">${{ number_format($item['total'], 2) }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center">No items</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
 
-    <tr>
-        <td class="text-right">Tax:</td>
-        <td class="text-right">${{ number_format($taxAmount, 2) }}</td>
-    </tr>
+        <!-- Totals -->
+        <table class="total-table">
+            <tr>
+                <td class="text-right">Sub Total:</td>
+                <td class="text-right">${{ number_format($subTotal, 2) }}</td>
+            </tr>
 
-    <tr>
-        <td class="grand-total">Grand Total:</td>
-        <td class="grand-total text-right">${{ number_format($grandTotal, 2) }}</td>
-    </tr>
-</table>
+            <tr>
+                <td class="text-right">Tax:</td>
+                <td class="text-right">${{ number_format($taxAmount, 2) }}</td>
+            </tr>
 
-<!-- Footer -->
-<div class="footer">
-    <strong>Note:</strong><br>
-    Thank you for your purchase. This is a system-generated invoice.
+            <tr>
+                <td class="grand-total">Grand Total:</td>
+                <td class="grand-total text-right">${{ number_format($grandTotal, 2) }}</td>
+            </tr>
+        </table>
 
-    <br><br>
+        <!-- Footer -->
+        <div class="footer">
+            Thank you for your purchase.
+        </div>
 
-    <strong>Terms:</strong><br>
-    Payment is non-refundable after successful delivery.
-</div>
+        <div class="signature">
+            ___________________________<br>
+            Authorized Signature
+        </div>
 
-<div class="signature">
-    <br><br>
-    ___________________________<br>
-    Authorized Signature
-</div>
+        <!-- Page Break -->
+        <div style="page-break-after: always;"></div>
+    @endforeach
 
 </body>
+
 </html>

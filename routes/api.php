@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\NewsLetterController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
@@ -95,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/dashboard/overview', 'overview');
         Route::get('/my-orders', 'myOrders');
         Route::get('/my-cards', 'mycards');
-        Route::get('/invoices/{invoice}/download', 'downloadInvoice');
+        Route::post('/invoices/download', 'downloadInvoice');
     });
     Route::controller(FavoriteController::class)->group(function () {
         Route::post('/favorites', 'store');
@@ -150,3 +151,4 @@ Route::controller(NewsApiController::class)->group(function () {
 Route::post('/newsletter', [NewsLetterController::class, 'store']);
 Route::get('/about-us', [AboutUsController::class, 'show']);
 Route::get('/platform', [PlatformController::class, 'show']);
+Route::get('/careers', [CareerController::class, 'show']);

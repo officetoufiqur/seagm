@@ -152,11 +152,6 @@ watch(() => form.images.length, async () => {
                     <!-- Main Fields -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <InputLabel label="Section" v-model="form.section" type="text" />
-                            <span class="text-red-500 text-sm" v-if="form.errors.section">{{ form.errors.section
-                                }}</span>
-                        </div>
-                        <div>
                             <InputLabel label="Title" v-model="form.title" type="text" />
                             <span class="text-red-500 text-sm" v-if="form.errors.title">{{ form.errors.title }}</span>
                         </div>

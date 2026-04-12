@@ -93,23 +93,30 @@ class DashboardController extends Controller
         return $this->successResponse($invoices, 'My invoices retrieved successfully');
     }
 
-    public function downloadInvoice($id)
+    public function downloadInvoice(Request $request)
     {
         $user = Auth::user();
 
-        $invoice = Invoice::find($id);
+        $ids = $request->invoice_ids;
 
-        if (! $invoice || $invoice->user_id !== $user->id) {
-            return $this->errorResponse('Invoice not found', 404);
+        $invoices = Invoice::whereIn('id', $ids)
+            ->where('user_id', $user->id)
+            ->get();
+
+        if ($invoices->isEmpty()) {
+            return $this->errorResponse('No invoices found', 404);
         }
 
-        $data = $invoice->toPdf();
+        $data = [];
 
+        foreach ($invoices as $invoice) {
+            $data[] = $invoice->toPdf();
+        }
 
-        $filename = 'invoice-'.($invoice->invoice_number ?? $invoice->id).'.pdf';
+        $pdf = Pdf::loadView('pdf.invoice', [
+            'invoices' => $data,
+        ]);
 
-        $pdf = Pdf::loadView('pdf.invoice', $data);
-
-        return $pdf->download($filename);
+        return $pdf->download('bulk-invoices.pdf');
     }
 }

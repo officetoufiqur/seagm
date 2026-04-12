@@ -87,6 +87,24 @@ const mainNavItems: NavItem[] = [
         title: 'Platform',
         href: '/platform',
         icon: ScrollTextIcon,
+    },
+    {
+        title: 'Career',
+        icon: ScrollTextIcon,
+        subMenu: [
+            {
+                title: 'Careers Heading',
+                href: '/careers',
+            },
+            {
+                title: 'Employee Benefits',
+                href: '/employee-benefits',
+            },
+            {
+                title: 'Join Us',
+                href: '/join-us',
+            }
+        ]
     }
 
 
