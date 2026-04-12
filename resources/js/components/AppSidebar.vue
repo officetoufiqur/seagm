@@ -82,6 +82,11 @@ const mainNavItems: NavItem[] = [
                 href: '/departments',
             }
         ]
+    },
+    {
+        title: 'Platform',
+        href: '/platform',
+        icon: ScrollTextIcon,
     }
 
 

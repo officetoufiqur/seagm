@@ -17,6 +17,7 @@ use App\Http\Controllers\HitPayController;
 use App\Http\Controllers\PaynowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PaypalWebhookController;
+use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\Profile\UserProfileController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ReviewController;
@@ -148,3 +149,4 @@ Route::controller(NewsApiController::class)->group(function () {
 
 Route::post('/newsletter', [NewsLetterController::class, 'store']);
 Route::get('/about-us', [AboutUsController::class, 'show']);
+Route::get('/platform', [PlatformController::class, 'show']);

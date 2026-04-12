@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AboutUsSeeder::class,
             DepartmentSeeder::class,
             VisionSeeder::class,
+            PlatformSeeder::class
         ]);
 
     }

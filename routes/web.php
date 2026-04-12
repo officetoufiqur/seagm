@@ -15,6 +15,7 @@ use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsVideoController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\StripePaymentController;
@@ -200,6 +201,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/departments', 'departments')->name('departments.index');
         Route::get('/departments/edit/{id}', 'departmentsEdit')->name('departments.edit');
         Route::post('/departments/update/{id}', 'departmentsUpdate')->name('departments.update');
+    });
+
+    Route::controller(PlatformController::class)->group(function () {
+        Route::get('/platform', 'index')->name('platform.index');
+        Route::get('/platform/edit/{id}', 'edit')->name('platform.edit');
+        Route::post('/platform/update/{id}', 'update')->name('platform.update');
     });
 
 });
