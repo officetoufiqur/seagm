@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutContactController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
+use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\TermsController;
 use Illuminate\Support\Facades\Artisan;
@@ -234,6 +236,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/join-us/edit/{id}', 'edit')->name('join-us.edit');
         Route::post('/join-us/update/{id}', 'update')->name('join-us.update');
         Route::delete('/join-us/destroy/{id}', 'destroy')->name('join-us.destroy');
+    });
+
+     Route::controller(AboutContactController::class)->group(function () {
+        Route::get('/about-contact', 'index')->name('about-contact.index');
+        Route::get('/about-contact/edit/{id}', 'edit')->name('about-contact.edit');
+        Route::post('/about-contact/update/{id}', 'update')->name('about-contact.update');
+    });
+
+    Route::controller(SocialController::class)->group(function () {
+        Route::get('/socials', 'index')->name('socials.index');
+        Route::get('/socials/create', 'create')->name('socials.create');
+        Route::post('/socials/store', 'store')->name('socials.store');
+        Route::get('/socials/edit/{id}', 'edit')->name('socials.edit');
+        Route::post('/socials/update/{id}', 'update')->name('socials.update');
+        Route::delete('/socials/destroy/{id}', 'destroy')->name('socials.destroy');
     });
 
 });

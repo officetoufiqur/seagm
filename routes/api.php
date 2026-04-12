@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutContactController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\CartController;
@@ -152,3 +153,4 @@ Route::post('/newsletter', [NewsLetterController::class, 'store']);
 Route::get('/about-us', [AboutUsController::class, 'show']);
 Route::get('/platform', [PlatformController::class, 'show']);
 Route::get('/careers', [CareerController::class, 'show']);
+Route::get('/about-contact', [AboutContactController::class, 'show']);

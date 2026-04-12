@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             VisionSeeder::class,
             PlatformSeeder::class,
             CareerSeeder::class,
+            AboutContactSeeder::class
         ]);
 
     }

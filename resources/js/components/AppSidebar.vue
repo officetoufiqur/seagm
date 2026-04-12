@@ -105,6 +105,16 @@ const mainNavItems: NavItem[] = [
                 href: '/join-us',
             }
         ]
+    },
+    {
+        title: 'About Contact',
+        href: '/about-contact',
+        icon: ScrollTextIcon,
+    },
+    {
+        title: 'Socials',
+        href: '/socials',
+        icon: ScrollTextIcon,
     }
 
 
