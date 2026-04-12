@@ -77,6 +77,10 @@ const mainNavItems: NavItem[] = [
                 title: 'Vision',
                 href: '/vision',
             },
+            {
+                title: 'Departments',
+                href: '/departments',
+            }
         ]
     }
 

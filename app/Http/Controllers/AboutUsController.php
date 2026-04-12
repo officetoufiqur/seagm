@@ -121,9 +121,8 @@ class AboutUsController extends Controller
         $vision = Vision::findOrFail($id);
 
         $vision->update([
-            'description' => $request->description
+            'description' => $request->description,
         ]);
-
 
         $existingItems = $vision->items()->get();
         $existingIds = $existingItems->pluck('id')->toArray();
@@ -156,9 +155,7 @@ class AboutUsController extends Controller
                     'image' => $itemImage,
                 ]);
 
-            }
-  
-            else {
+            } else {
 
                 $newItem = $vision->items()->create([
                     'title' => $item['title'],
@@ -177,5 +174,99 @@ class AboutUsController extends Controller
         }
 
         return redirect()->route('vision.index')->with('message', 'Vision updated successfully.');
+    }
+
+    public function departments()
+    {
+        $department = Department::first();
+
+        return Inertia::render('Departments/Index', [
+            'department' => $department,
+        ]);
+    }
+
+    public function departmentsEdit($id)
+    {
+        $department = Department::with('items')->findOrFail($id);
+
+        return Inertia::render('Departments/Edit', [
+            'department' => $department,
+        ]);
+    }
+
+    public function departmentsUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'items' => 'nullable|array',
+            'items.*.title' => 'required|string|max:255',
+            'items.*.subtitle' => 'nullable|string',
+            'items.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'nullable|string',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $department = Department::findOrFail($id);
+
+        $file = $department->image;
+
+        if ($request->hasFile('image')) {
+            $file = FileUpload::updateFile($request->file('image'), 'uploads/departments', $file);
+        }
+
+        $department->update([
+            'description' => $request->description,
+            'image' => $file,
+        ]);
+
+        $existingItems = $department->items()->get();
+        $existingIds = $existingItems->pluck('id')->toArray();
+
+        $requestIds = [];
+
+        foreach ($request->items ?? [] as $item) {
+            $itemImage = null;
+
+            if (isset($item['id'])) {
+                $oldItem = $existingItems->where('id', $item['id'])->first();
+                $itemImage = $oldItem?->image;
+            }
+
+            if (isset($item['image']) && $item['image'] instanceof \Illuminate\Http\UploadedFile) {
+                $itemImage = FileUpload::updateFile(
+                    $item['image'],
+                    'uploads/departments/items',
+                    $itemImage
+                );
+            }
+
+            if (! empty($item['id'])) {
+
+                $requestIds[] = $item['id'];
+
+                $department->items()->where('id', $item['id'])->update([
+                    'title' => $item['title'],
+                    'subtitle' => $item['subtitle'],
+                    'image' => $itemImage,
+                ]);
+
+            } else {
+
+                $newItem = $department->items()->create([
+                    'title' => $item['title'],
+                    'subtitle' => $item['subtitle'],
+                    'image' => $itemImage,
+                ]);
+
+                $requestIds[] = $newItem->id;
+            }
+        }
+
+        $deleteIds = array_diff($existingIds, $requestIds);
+
+        if (! empty($deleteIds)) {
+            $department->items()->whereIn('id', $deleteIds)->delete();
+        }
+
+        return redirect()->route('departments.index')->with('message', 'Department updated successfully.');
     }
 }

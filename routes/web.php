@@ -32,6 +32,7 @@ Route::get('/', function () {
 
 Route::get('/dump-autoload', function () {
     exec('composer dump-autoload');
+
     return 'Composer autoload dumped!';
 });
 
@@ -45,11 +46,12 @@ Route::get('/clear-cache', function () {
 });
 
 Route::get('/run-schedule', function () {
-    Artisan::call('send:expires-reminder'); 
+    Artisan::call('send:expires-reminder');
     Artisan::call('send:check-medical-proof');
     Artisan::call('app:task-overdue');
     Artisan::call('company:renewal-status');
     Artisan::call('app:installment');
+
     return 'Schedule run successfully!';
 });
 
@@ -62,6 +64,7 @@ Route::get('/storage-link', function () {
     }
 
     symlink($target, $link);
+
     return 'Symlink created successfully.';
 });
 
@@ -78,8 +81,6 @@ Route::get('/skrill/payment/success', [SkrillController::class, 'success'])->nam
 Route::get('/skrill/payment/cancel', [SkrillController::class, 'cancel'])->name('skrill.payment.cancel');
 
 Route::get('/hitpay/success', [HitPayController::class, 'hitpaySuccess'])->name('hitpay.success');
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('ckeditor', [CKEditorController::class, 'index']);
@@ -135,13 +136,13 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(ExclusiveOfferController::class)->group(function () {
-       Route::get('/exclusive-offers', 'index')->name('exclusive-offers.index');
-       Route::get('/exclusive-offers/create', 'create')->name('exclusive-offers.create');
-       Route::post('/exclusive-offers/store', 'store')->name('exclusive-offers.store');
-       Route::get('/exclusive-offers/edit/{offer}', 'edit')->name('exclusive-offers.edit');
-       Route::post('/exclusive-offers/update/{offer}', 'update')->name('exclusive-offers.update');
-       Route::post('/exclusive-offers/status/{offer}', 'status')->name('exclusive-offers.status');
-       Route::delete('/exclusive-offers/{offer}', 'destroy')->name('exclusive-offers.destroy'); 
+        Route::get('/exclusive-offers', 'index')->name('exclusive-offers.index');
+        Route::get('/exclusive-offers/create', 'create')->name('exclusive-offers.create');
+        Route::post('/exclusive-offers/store', 'store')->name('exclusive-offers.store');
+        Route::get('/exclusive-offers/edit/{offer}', 'edit')->name('exclusive-offers.edit');
+        Route::post('/exclusive-offers/update/{offer}', 'update')->name('exclusive-offers.update');
+        Route::post('/exclusive-offers/status/{offer}', 'status')->name('exclusive-offers.status');
+        Route::delete('/exclusive-offers/{offer}', 'destroy')->name('exclusive-offers.destroy');
     });
 
     Route::controller(CardController::class)->group(function () {
@@ -157,7 +158,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/card-items/update/{id}', 'update')->name('card-items.update');
         Route::delete('/card-items/{id}', 'destroy')->name('card-items.destroy');
     });
-    
+
     Route::controller(TermsController::class)->group(function () {
         Route::get('/terms', 'index')->name('terms.index');
         Route::get('/terms/create', 'create')->name('terms.create');
@@ -195,12 +196,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/vision', 'vision')->name('vision.index');
         Route::get('/vision/edit/{id}', 'visionEdit')->name('vision.edit');
         Route::post('/vision/update/{id}', 'visionUpdate')->name('vision.update');
+
+        Route::get('/departments', 'departments')->name('departments.index');
+        Route::get('/departments/edit/{id}', 'departmentsEdit')->name('departments.edit');
+        Route::post('/departments/update/{id}', 'departmentsUpdate')->name('departments.update');
     });
 
 });
 
 Route::get('/invoices/{invoice}/download', [DashboardController::class, 'downloadInvoice']);
-
 
 require __DIR__.'/settings.php';
 require __DIR__.'/command.php';
