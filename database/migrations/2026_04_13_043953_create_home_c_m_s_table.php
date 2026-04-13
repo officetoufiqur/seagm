@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('socials', function (Blueprint $table) {
+        Schema::create('home_c_m_s', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('page_id')->constrained()->cascadeOnDelete();
             $table->string('section');
-            $table->string('title');
-            $table->string('url');
-            $table->text('icon');
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+
+            $table->string('image')->nullable();
+            $table->text('icon')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('socials');
+        Schema::dropIfExists('home_c_m_s');
     }
 };

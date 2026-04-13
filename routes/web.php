@@ -2,19 +2,24 @@
 
 use App\Http\Controllers\AboutContactController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\AdvantageController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CKEditorController;
+use App\Http\Controllers\CmsController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DirectTopUpController;
 use App\Http\Controllers\EmployeeBenefitController;
 use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JoinUsController;
+use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsVideoController;
@@ -25,6 +30,7 @@ use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\TermsController;
+use App\Http\Controllers\ThroughController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -251,6 +257,67 @@ Route::middleware('auth')->group(function () {
         Route::get('/socials/edit/{id}', 'edit')->name('socials.edit');
         Route::post('/socials/update/{id}', 'update')->name('socials.update');
         Route::delete('/socials/destroy/{id}', 'destroy')->name('socials.destroy');
+    });
+
+     Route::controller(HomeController::class)->group(function () {
+        Route::get('/home-hero', 'index')->name('home-hero.index');
+        Route::get('/home-hero/edit/{id}', 'edit')->name('home-hero.edit');
+        Route::post('/home-hero/update/{id}', 'update')->name('home-hero.update');
+    });
+
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('/home-page', 'page')->name('home-page.index');
+        Route::get('/home-page/edit/{id}', 'pageEdit')->name('home-page.edit');
+        Route::post('/home-page/update/{id}', 'pageUpdate')->name('home-page.update');
+    });
+
+    Route::controller(CmsController::class)->group(function () {
+        Route::get('/about-cms', 'index')->name('about-cms.index');
+        Route::get('/about-cms/create', 'create')->name('about-cms.create');
+        Route::post('/about-cms/store', 'store')->name('about-cms.store');
+        Route::get('/about-cms/edit/{id}', 'edit')->name('about-cms.edit');
+        Route::post('/about-cms/update/{id}', 'update')->name('about-cms.update');
+        Route::delete('/about-cms/destroy/{id}', 'destroy')->name('about-cms.destroy');
+    });
+
+
+    Route::controller(AdvantageController::class)->group(function () {
+        Route::get('/advantage', 'index')->name('advantage.index');
+        Route::get('/advantage/create', 'create')->name('advantage.create');
+        Route::post('/advantage/store', 'store')->name('advantage.store');
+        Route::get('/advantage/edit/{id}', 'edit')->name('advantage.edit');
+        Route::post('/advantage/update/{id}', 'update')->name('advantage.update');
+        Route::delete('/advantage/destroy/{id}', 'destroy')->name('advantage.destroy');
+
+        Route::get('/advantage-card', 'cardEdit')->name('advantage.card');
+        Route::post('/advantage-card', 'cardUpdate')->name('advantage.card.update');
+    });
+
+    Route::controller(BrandController::class)->group(function () {
+        Route::get('/brands', 'index')->name('brands.index');
+        Route::get('/brands/create', 'create')->name('brands.create');
+        Route::post('/brands/store', 'store')->name('brands.store');
+        Route::get('/brands/edit/{id}', 'edit')->name('brands.edit');
+        Route::post('/brands/update/{id}', 'update')->name('brands.update');
+        Route::delete('/brands/destroy/{id}', 'destroy')->name('brands.destroy');
+    });
+
+    Route::controller(ThroughController::class)->group(function () {
+        Route::get('/through', 'index')->name('through.index');
+        Route::get('/through/create', 'create')->name('through.create');
+        Route::post('/through/store', 'store')->name('through.store');
+        Route::get('/through/edit/{id}', 'edit')->name('through.edit');
+        Route::post('/through/update/{id}', 'update')->name('through.update');
+        Route::delete('/through/destroy/{id}', 'destroy')->name('through.destroy');
+    });
+
+    Route::controller(MilestoneController::class)->group(function () {
+        Route::get('/milestones', 'index')->name('milestones.index');
+        Route::get('/milestones/create', 'create')->name('milestones.create');
+        Route::post('/milestones/store', 'store')->name('milestones.store');
+        Route::get('/milestones/edit/{id}', 'edit')->name('milestones.edit');
+        Route::post('/milestones/update/{id}', 'update')->name('milestones.update');
+        Route::delete('/milestones/destroy/{id}', 'destroy')->name('milestones.destroy');
     });
 
 });

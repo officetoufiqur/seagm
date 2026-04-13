@@ -10,7 +10,7 @@ use App\Models\News;
 use App\Models\Promotion;
 use App\Trait\ApiResponse;
 
-class HomeController extends Controller
+class HomeApiController extends Controller
 {
     use ApiResponse;
 

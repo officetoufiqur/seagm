@@ -3,7 +3,7 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BadgePercentIcon, ConstructionIcon, Grid2X2PlusIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon } from 'lucide-vue-next';
+import { BadgePercentIcon, ConstructionIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
@@ -27,19 +27,22 @@ const mainNavItems: NavItem[] = [
         icon: SquarePercentIcon,
     },
     {
-        title: 'News Categories',
-        href: '/news-categories',
-        icon: Grid2X2PlusIcon,
-    },
-    {
         title: 'News',
-        href: '/news',
         icon: NewspaperIcon,
-    },
-    {
-        title: 'News Videos',
-        href: '/news-videos',
-        icon: NewspaperIcon,
+        subMenu: [
+            {
+                title: 'News Categories',
+                href: '/news-categories'
+            },
+            {
+                title: 'News',
+                href: '/news',
+            },
+            {
+                title: 'News Videos',
+                href: '/news-videos'
+            },
+        ]
     },
     {
         title: 'Exclusive offers',
@@ -66,11 +69,44 @@ const mainNavItems: NavItem[] = [
         icon: ScrollTextIcon,
     },
     {
-        title: 'About',
+        title: 'About Us',
         icon: ScrollTextIcon,
         subMenu: [
             {
-                title: 'About Us',
+                title: 'Home',
+                subMenu: [
+                    {
+                        title: 'Hero Section',
+                        href: '/home-hero',
+                    },
+                    {
+                        title: 'Page',
+                        href: '/home-page',
+                    },
+                    {
+                        title: 'CMS',
+                        href: '/about-cms',
+                    },
+                    {
+                        title: 'Advantage',
+                        href: '/advantage',
+                    },
+                    {
+                        title: 'Brands',
+                        href: '/brands',
+                    },
+                    {
+                        title: 'Through Items',
+                        href: '/through',
+                    },
+                    {
+                        title: 'Milestone',
+                        href: '/milestones',
+                    }
+                ]
+            },
+            {
+                title: 'About',
                 href: '/about-us',
             },
             {
@@ -80,42 +116,39 @@ const mainNavItems: NavItem[] = [
             {
                 title: 'Departments',
                 href: '/departments',
+            },
+            {
+                title: 'Platform',
+                href: '/platform'
+            },
+            {
+                title: 'Career',
+                subMenu: [
+                    {
+                        title: 'Careers Heading',
+                        href: '/careers',
+                    },
+                    {
+                        title: 'Employee Benefits',
+                        href: '/employee-benefits',
+                    },
+                    {
+                        title: 'Join Us',
+                        href: '/join-us',
+                    }
+                ]
+            },
+            {
+                title: 'About Contact',
+                href: '/about-contact'
+            },
+            {
+                title: 'Socials',
+                href: '/socials'
             }
         ]
     },
-    {
-        title: 'Platform',
-        href: '/platform',
-        icon: ScrollTextIcon,
-    },
-    {
-        title: 'Career',
-        icon: ScrollTextIcon,
-        subMenu: [
-            {
-                title: 'Careers Heading',
-                href: '/careers',
-            },
-            {
-                title: 'Employee Benefits',
-                href: '/employee-benefits',
-            },
-            {
-                title: 'Join Us',
-                href: '/join-us',
-            }
-        ]
-    },
-    {
-        title: 'About Contact',
-        href: '/about-contact',
-        icon: ScrollTextIcon,
-    },
-    {
-        title: 'Socials',
-        href: '/socials',
-        icon: ScrollTextIcon,
-    }
+
 
 
 ];

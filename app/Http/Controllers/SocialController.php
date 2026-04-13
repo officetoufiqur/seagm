@@ -27,7 +27,7 @@ class SocialController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'url' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'icon' => 'required|string',
         ]);
 
         Social::create([
@@ -54,7 +54,7 @@ class SocialController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'url' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'icon' => 'required|string',
         ]);
 
         $social = Social::findOrFail($id);

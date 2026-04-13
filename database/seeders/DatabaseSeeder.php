@@ -21,7 +21,13 @@ class DatabaseSeeder extends Seeder
             VisionSeeder::class,
             PlatformSeeder::class,
             CareerSeeder::class,
-            AboutContactSeeder::class
+            AboutContactSeeder::class,
+            HeroSectionSeeder::class,
+            PageSeeder::class,
+            HomeCMSSeeder::class,
+            AdvantageSeeder::class,
+            MilestoneSeeder::class,
+            BrandSeeder::class
         ]);
 
     }

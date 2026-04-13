@@ -60,7 +60,7 @@ const removeItem = (index: number) => {
 
 
 const submit = () => {
-    form.post(`/joinus/update/${props.joinus.id}`, {
+    form.post(`/join-us/update/${props.joinus.id}`, {
         forceFormData: true,
     });
 };
