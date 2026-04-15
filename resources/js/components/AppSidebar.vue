@@ -148,6 +148,11 @@ const mainNavItems: NavItem[] = [
             }
         ]
     },
+    {
+        title: 'Support',
+        href: '/user-guide-categories',
+        icon: ScrollTextIcon
+    }
 
 
 

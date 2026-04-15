@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             HomeCMSSeeder::class,
             AdvantageSeeder::class,
             MilestoneSeeder::class,
-            BrandSeeder::class
+            BrandSeeder::class,
+            GuideCategorySeeder::class
         ]);
 
     }

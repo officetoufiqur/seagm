@@ -31,6 +31,7 @@ use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ThroughController;
+use App\Http\Controllers\UserGuideCategoryController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -318,6 +319,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/milestones/edit/{id}', 'edit')->name('milestones.edit');
         Route::post('/milestones/update/{id}', 'update')->name('milestones.update');
         Route::delete('/milestones/destroy/{id}', 'destroy')->name('milestones.destroy');
+    });
+
+    Route::controller(UserGuideCategoryController::class)->group(function () {
+        Route::get('/user-guide-categories', 'index')->name('user-guide-categories.index');
+        Route::get('/user-guide-categories/create', 'create')->name('user-guide-categories.create');
+        Route::post('/user-guide-categories/store', 'store')->name('user-guide-categories.store');
+        Route::get('/user-guide-categories/edit/{id}', 'edit')->name('user-guide-categories.edit');
+        Route::post('/user-guide-categories/update/{id}', 'update')->name('user-guide-categories.update');
+        Route::delete('/user-guide-categories/destroy/{id}', 'destroy')->name('user-guide-categories.destroy');
+        Route::post('/upload-image', 'uploadImage')->name('upload-image');
     });
 
 });
