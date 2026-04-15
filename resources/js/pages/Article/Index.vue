@@ -4,26 +4,24 @@ import FlashMessage from '@/components/admin/FlashMessage.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { SquarePenIcon, Trash2Icon } from 'lucide-vue-next';
+import { BanIcon, CheckCircle2Icon, SquarePenIcon, Trash2Icon } from 'lucide-vue-next';
 import Swal from 'sweetalert2';
 import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'User Guide Categories List',
-        href: '/user-guide-categories',
+        title: 'Articles List',
+        href: '/articles',
     },
 ];
 
-type UserGuide = {
+type SubCategory = {
     id: number
     name: number
-    icon: number
-    description: string
 }
 
 const props = defineProps<{
-    user_guide: UserGuide[];
+    articles: SubCategory[];
     flash: {
         message?: string;
     };
@@ -31,13 +29,14 @@ const props = defineProps<{
 
 const columns = [
     { label: 'ID', key: 'id' },
-    { label: 'Name', key: 'name' },
-    { label: 'Icon', key: 'icon' },
-    { label: 'Description', key: 'description' },
+    { label: 'Category Name', key: 'subcategory' },
+    { label: 'Title', key: 'title' },
+    { label: 'Content', key: 'content' },
+    { label: 'Promoted', key: 'promoted' },
     { label: 'Action', key: 'action' },
 ]
 
-const data = ref(props.user_guide);
+const data = ref(props.articles);
 
 
 function deleteUserGuide(id: number) {
@@ -51,14 +50,23 @@ function deleteUserGuide(id: number) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete(`/user-guide-categories/destroy/${id}`, {
+            router.delete(`/articles/destroy/${id}`, {
                 preserveScroll: true,
                 onSuccess: () => {
-                    data.value = props.user_guide;
+                    data.value = props.articles;
                 }
             });
         }
     })
+}
+
+const statusChange = (id: number) => {
+    router.post(`/articles/promoted/${id}`, {}, {
+        preserveScroll: true,
+        onSuccess: () => {
+            data.value = props.articles;
+        }
+    });
 }
 
 
@@ -66,21 +74,30 @@ function deleteUserGuide(id: number) {
 
 <template>
 
-    <Head title="User Guide Categories" />
+    <Head title="Articles" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <FlashMessage :message="props.flash.message" />
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-7">
-            <FilterTable :rows="data" :columns="columns" title="User Guide Categories List" create-btn create-text="Create"
-                create-url="/user-guide-categories/create">
+            <FilterTable :rows="data" :columns="columns" title="Articles List" create-btn create-text="Create"
+                create-url="/articles/create">
 
-                <template #icon="{ item }">
-                   <span v-html="item.icon"></span>
+                <template #subcategory="{ item }">
+                   <span>{{ item.sub_category.name }}</span>
+                </template>
+
+                <template #content="{ item }">
+                    {{ item.content.slice(0, 100) }}
+                </template>
+
+                <template #promoted="{ item }">
+                    <span v-if="item.is_promoted == 1">Yes</span>
+                    <span v-else>No</span>
                 </template>
 
                 <template #action="{ item }">
                     <div class="flex items-center gap-2">
-                        <Link :href="`/user-guide-categories/edit/${item.id}`"
+                        <Link :href="`/articles/edit/${item.id}`"
                             class="bg-[#0AB39C] text-sm cursor-pointer text-white rounded font-medium hover:bg-[#0AB39C] py-2 px-3">
                             <SquarePenIcon class="w-4.5 h-4.5" />
                         </Link>
@@ -88,6 +105,16 @@ function deleteUserGuide(id: number) {
                             class="bg-[#F06548] text-sm cursor-pointer text-white rounded font-medium py-2 px-3">
                             <Trash2Icon class="w-4.5 h-4.5" />
                         </button>
+
+                        <!-- promoted button -->
+                        <button @click="statusChange(item.id)" :class="item.is_promoted == 1
+                            ? 'bg-red-500 hover:bg-red-600'
+                            : 'bg-green-500 hover:bg-green-600'"
+                            class="text-sm cursor-pointer text-white rounded font-medium py-2 px-3 flex items-center gap-1"
+                            :title="item.is_promoted == 1 ? 'Deactivate' : 'Activate'">
+                            <component :is="item.is_promoted == 1 ? BanIcon : CheckCircle2Icon" class="w-4 h-4" />
+                        </button>
+                        
                     </div>
                 </template>
             </FilterTable>

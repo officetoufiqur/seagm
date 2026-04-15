@@ -3,7 +3,7 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BadgePercentIcon, ConstructionIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon } from 'lucide-vue-next';
+import { BadgePercentIcon, ConstructionIcon, HandshakeIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
@@ -150,8 +150,21 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Support',
-        href: '/user-guide-categories',
-        icon: ScrollTextIcon
+        icon: HandshakeIcon,
+        subMenu: [
+            {
+                title: 'Guide Categories',
+                href: '/user-guide-categories',
+            },
+            {
+                title: 'Sub Categories',
+                href: '/sub-categories',
+            },
+            {
+                title: 'Articles',
+                href: '/articles',
+            }
+        ]
     }
 
 

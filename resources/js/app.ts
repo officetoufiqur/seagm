@@ -6,7 +6,6 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
 
-// ✅ ADD THESE
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
@@ -24,7 +23,6 @@ createInertiaApp({
 
         app.use(plugin)
 
-        // ✅ REGISTER COMPONENT GLOBALLY
         app.component('QuillEditor', QuillEditor)
 
         app.mount(el)

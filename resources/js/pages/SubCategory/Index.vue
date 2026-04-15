@@ -10,20 +10,19 @@ import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'User Guide Categories List',
-        href: '/user-guide-categories',
+        title: 'Sub Categories List',
+        href: '/sub_categories',
     },
 ];
 
-type UserGuide = {
+type SubCategory = {
     id: number
     name: number
-    icon: number
-    description: string
+    subname: string
 }
 
 const props = defineProps<{
-    user_guide: UserGuide[];
+    sub_categories: SubCategory[];
     flash: {
         message?: string;
     };
@@ -31,13 +30,12 @@ const props = defineProps<{
 
 const columns = [
     { label: 'ID', key: 'id' },
-    { label: 'Name', key: 'name' },
-    { label: 'Icon', key: 'icon' },
-    { label: 'Description', key: 'description' },
+    { label: 'Category Name', key: 'subname' },
+    { label: 'Sub Category Name', key: 'name' },
     { label: 'Action', key: 'action' },
 ]
 
-const data = ref(props.user_guide);
+const data = ref(props.sub_categories);
 
 
 function deleteUserGuide(id: number) {
@@ -51,10 +49,10 @@ function deleteUserGuide(id: number) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete(`/user-guide-categories/destroy/${id}`, {
+            router.delete(`/sub-categories/destroy/${id}`, {
                 preserveScroll: true,
                 onSuccess: () => {
-                    data.value = props.user_guide;
+                    data.value = props.sub_categories;
                 }
             });
         }
@@ -66,21 +64,21 @@ function deleteUserGuide(id: number) {
 
 <template>
 
-    <Head title="User Guide Categories" />
+    <Head title="Sub Categories" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <FlashMessage :message="props.flash.message" />
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-7">
-            <FilterTable :rows="data" :columns="columns" title="User Guide Categories List" create-btn create-text="Create"
-                create-url="/user-guide-categories/create">
+            <FilterTable :rows="data" :columns="columns" title="Sub Categories List" create-btn create-text="Create"
+                create-url="/sub-categories/create">
 
-                <template #icon="{ item }">
-                   <span v-html="item.icon"></span>
+                <template #subname="{ item }">
+                    <span>{{ item.guid_category.name }}</span>
                 </template>
 
                 <template #action="{ item }">
                     <div class="flex items-center gap-2">
-                        <Link :href="`/user-guide-categories/edit/${item.id}`"
+                        <Link :href="`/sub-categories/edit/${item.id}`"
                             class="bg-[#0AB39C] text-sm cursor-pointer text-white rounded font-medium hover:bg-[#0AB39C] py-2 px-3">
                             <SquarePenIcon class="w-4.5 h-4.5" />
                         </Link>

@@ -19,18 +19,53 @@ class UserGuideCategoryController extends Controller
         return inertia('GuideCategory/Create');
     }
 
-    public function uploadImage(Request $request)
+    public function store(Request $request)
     {
-        if ($request->hasFile('image')) {
+        $request->validate([
+            'name' => 'required',
+            'icon' => 'required',
+            'description' => 'required',
+        ]);
 
-            $file = $request->file('image');
-            $filename = time().'.'.$file->getClientOriginalExtension();
+        UserGuideCategory::create([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'description' => $request->description
+        ]);
 
-            $file->move(public_path('uploads'), $filename);
+        return redirect()->route('user-guide-categories.index')->with('message', 'User Guide Category created successfully.');
+    }
 
-            return response()->json([
-                'url' => asset('uploads/'.$filename),
-            ]);
-        }
+    public function edit($id)
+    {
+        $user_guide = UserGuideCategory::find($id);
+
+        return inertia('GuideCategory/Edit', compact('user_guide'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'icon' => 'required',
+            'description' => 'required',
+        ]);
+
+        $user_guide = UserGuideCategory::find($id);
+        $user_guide->update([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('user-guide-categories.index')->with('message', 'User Guide Category updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $user_guide = UserGuideCategory::find($id);
+        $user_guide->delete();
+
+        return redirect()->route('user-guide-categories.index')->with('message', 'User Guide Category deleted successfully.');
     }
 }

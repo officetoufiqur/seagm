@@ -2,51 +2,38 @@
 import Button from '@/components/admin/Button.vue';
 import InputLabel from '@/components/admin/InputLabel.vue';
 import LinkButton from '@/components/admin/LinkButton.vue';
+import Textarea from '@/components/admin/Textarea.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
-import 'dropify/dist/css/dropify.min.css';
-import $ from 'jquery';
-import 'dropify';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'News List',
-        href: '/news',
+        title: 'User Guide Categories',
+        href: '/user-guide-categories',
     },
 ];
 
+interface Guide {
+    id: number;
+    name: string;
+    icon: string;
+    description: string;
+}
+
 const props = defineProps<{
-    categories: {
-        id: number;
-        name: string;
-    }[];
-    news: {
-        id: number;
-        category_id: number;
-        title: string;
-        content: string;
-        image: string;
-    };
-}>()
+    user_guide: Guide;
+}>();
 
 const form = useForm({
-    category_id: props.news.category_id,
-    title: props.news.title,
-    content: props.news.content,
-    image: null as File | null,
+    name: props.user_guide.name,
+    icon: props.user_guide.icon,
+    description: props.user_guide.description,
 });
 
-const mainImage = (e: Event) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-
-    form.image = file;
-};
 
 const submit = () => {
-    form.post('/news/update/' + props.news.id, {
+    form.post('/user-guide-categories/update/' + props.user_guide.id, {
         onSuccess: () => {
             form.reset();
         }
@@ -54,36 +41,20 @@ const submit = () => {
 };
 
 
-const mainDropify = () => {
-    $('.mainImage').dropify({
-        defaultFile: props.news.image,
-        height: 150,
-        messages: {
-            default: 'Drag and drop or click',
-            replace: 'Replace',
-            remove: 'Remove',
-            error: 'Error'
-        }
-    });
-};
-
-onMounted(() => {
-    mainDropify();
-});
 
 </script>
 
 <template>
 
-    <Head title="News" />
+    <Head title="User Guide Categories" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="bg-white m-7 p-5 rounded">
 
             <!-- Header -->
             <div class="flex items-center justify-between border-b pb-3">
-                <h1 class="text-xl font-medium">News Edit</h1>
-                <LinkButton label="Back" url="/news" />
+                <h1 class="text-xl font-medium">User Guide Categories Update</h1>
+                <LinkButton label="Back" url="/user-guide-categories" />
             </div>
 
             <div class="p-5">
@@ -92,46 +63,39 @@ onMounted(() => {
                     <!-- Main Fields -->
                     <div class="mb-3 space-y-4">
                         <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label for="category_id" class="text-[#5D5D5D] font-medium text-sm">Select Category</label>
-                               <select name="category_id" id="category_id" v-model="form.category_id" class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm">
-                                    <option value="">Select Category</option>
-                                    <option v-for="category in props.categories" :value="category.id" :key="category.id">
-                                        {{ category.name }}
-                                    </option>
-                                </select>
-                                <span class="text-red-500 text-sm" v-if="form.errors.category_id">
-                                    {{ form.errors.category_id }}
+                            <div class="col-span-1">
+                                <InputLabel label="Name" v-model="form.name" type="text" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.name">
+                                    {{ form.errors.name }}
                                 </span>
                             </div>
-                            <div>
-                                <InputLabel label="Title" v-model="form.title" type="text" />
-                                <span class="text-red-500 text-sm" v-if="form.errors.title">
-                                    {{ form.errors.title }}
-                                </span>
-                            </div>
-                            
-                            <div class="h-30">
-                                <label for="content" class="text-[#5D5D5D] font-medium text-sm">Terms & Conditions</label>
-                                <QuillEditor v-model:content="form.content" contentType="html" theme="snow"
-                                    class="mt-4" />
-                                <span class="text-red-500 text-sm" v-if="form.errors.content">
-                                    {{ form.errors.content }}
-                                </span>
-                            </div>
-                            <div>
-                                    <label for="image" class="text-[#5D5D5D] font-medium text-sm">Image</label>
-                                    <input type="file" id="image" class="mainImage" @change="mainImage" />
-                                    <span class="text-red-500 text-sm" v-if="form.errors.image">
-                                        {{ form.errors.image }}
+
+                            <div class="col-span-2 grid grid-cols-2 gap-3">
+
+                                <div>
+                                    <Textarea forr="description" label="Icon (SVG)"
+                                        placeholder="Enter category icon" v-model="form.icon" :rows="7" />
+                                    <span class="text-red-500 text-sm" v-if="form.errors.icon">
+                                        {{ form.errors.icon }}
                                     </span>
                                 </div>
+
+                                <div class="h-30">
+                                    <label for="description"
+                                        class="text-[#5D5D5D] font-medium text-sm">Description</label>
+                                    <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
+                                        class="mt-4" />
+                                    <span class="text-red-500 text-sm" v-if="form.errors.description">
+                                        {{ form.errors.description }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Submit -->
                     <div class="border-t pt-4 border-dashed">
-                        <Button label="Update News" type="submit" />
+                        <Button label="Update" type="submit" />
                     </div>
 
                 </form>
@@ -140,16 +104,3 @@ onMounted(() => {
         </div>
     </AppLayout>
 </template>
-
-<style>
-.dropify-wrapper .dropify-preview .dropify-render img {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain;
-}
-
-.dropify-wrapper .dropify-message p {
-    font-size: 16px;
-    text-align: center;
-}
-</style>

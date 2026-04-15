@@ -2,6 +2,7 @@
 import Button from '@/components/admin/Button.vue';
 import InputLabel from '@/components/admin/InputLabel.vue';
 import LinkButton from '@/components/admin/LinkButton.vue';
+import Textarea from '@/components/admin/Textarea.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
@@ -51,33 +52,38 @@ const submit = () => {
                     <!-- Main Fields -->
                     <div class="mb-3 space-y-4">
                         <div class="grid grid-cols-2 gap-3">
-                            <div>
+                            <div class="col-span-1">
                                 <InputLabel label="Name" v-model="form.name" type="text" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.name">
                                     {{ form.errors.name }}
                                 </span>
                             </div>
 
-                            <div>
-                                <InputLabel label="icon" v-model="form.icon" type="text" />
-                                <span class="text-red-500 text-sm" v-if="form.errors.icon">
-                                    {{ form.errors.icon }}
-                                </span>
-                            </div>
-                            
-                            <div class="h-30">
-                                <label for="description" class="text-[#5D5D5D] font-medium text-sm">Description</label>
-                                <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
-                                    class="mt-4" />
-                                <span class="text-red-500 text-sm" v-if="form.errors.description">
-                                    {{ form.errors.description }}
-                                </span>
+                            <div class="col-span-2 grid grid-cols-2 gap-3">
+
+                                <div>
+                                    <Textarea forr="description" label="Icon (SVG)"
+                                        placeholder="Enter category icon" v-model="form.icon" :rows="7" />
+                                    <span class="text-red-500 text-sm" v-if="form.errors.icon">
+                                        {{ form.errors.icon }}
+                                    </span>
+                                </div>
+
+                                <div class="h-30">
+                                    <label for="description"
+                                        class="text-[#5D5D5D] font-medium text-sm">Description</label>
+                                    <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
+                                        class="mt-4" />
+                                    <span class="text-red-500 text-sm" v-if="form.errors.description">
+                                        {{ form.errors.description }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Submit -->
-                    <div class="border-t pt-4 border-dashed mt-20">
+                    <div class="border-t pt-4 border-dashed">
                         <Button label="Submit" type="submit" />
                     </div>
 
@@ -87,4 +93,3 @@ const submit = () => {
         </div>
     </AppLayout>
 </template>
-

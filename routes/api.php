@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutContactController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\Api\ArticleFeedbackController;
 use App\Http\Controllers\Api\CardApiController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\DashboardController;
@@ -148,6 +149,7 @@ Route::controller(NewsApiController::class)->group(function () {
     Route::get('/gaming/news/category', 'gamingNewsByCategory');
     Route::get('/guide/category', 'guideCategory');
     Route::get('/news/category/details', 'newsCategoryDetails');
+    Route::get('/news/category/details/{id}', 'newsCategoryDetailsById');
 });
 
 Route::post('/newsletter', [NewsLetterController::class, 'store']);
@@ -156,3 +158,8 @@ Route::get('/platform', [PlatformController::class, 'show']);
 Route::get('/careers', [CareerController::class, 'show']);
 Route::get('/about-contact', [AboutContactController::class, 'show']);
 Route::get('/about-landing-page', [HomeController::class, 'landingPage']);
+
+Route::controller(ArticleFeedbackController::class)->group(function () {
+    Route::get('/articles/{id}/feedback', 'index');
+    Route::post('/articles/{id}/feedback', 'store');
+});

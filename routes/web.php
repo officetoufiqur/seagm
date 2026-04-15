@@ -5,6 +5,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AdvantageController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CardController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ThroughController;
 use App\Http\Controllers\UserGuideCategoryController;
@@ -328,7 +330,25 @@ Route::middleware('auth')->group(function () {
         Route::get('/user-guide-categories/edit/{id}', 'edit')->name('user-guide-categories.edit');
         Route::post('/user-guide-categories/update/{id}', 'update')->name('user-guide-categories.update');
         Route::delete('/user-guide-categories/destroy/{id}', 'destroy')->name('user-guide-categories.destroy');
-        Route::post('/upload-image', 'uploadImage')->name('upload-image');
+    });
+
+    Route::controller(SubCategoryController::class)->group(function () {
+        Route::get('/sub-categories', 'index')->name('sub-categories.index');
+        Route::get('/sub-categories/create', 'create')->name('sub-categories.create');
+        Route::post('/sub-categories/store', 'store')->name('sub-categories.store');
+        Route::get('/sub-categories/edit/{id}', 'edit')->name('sub-categories.edit');
+        Route::post('/sub-categories/update/{id}', 'update')->name('sub-categories.update');
+        Route::delete('/sub-categories/destroy/{id}', 'destroy')->name('sub-categories.destroy');
+    });
+
+    Route::controller(ArticleController::class)->group(function () {
+        Route::get('/articles', 'index')->name('articles.index');
+        Route::get('/articles/create', 'create')->name('articles.create');
+        Route::post('/articles/store', 'store')->name('articles.store');
+        Route::get('/articles/edit/{id}', 'edit')->name('articles.edit');
+        Route::post('/articles/update/{id}', 'update')->name('articles.update');
+        Route::delete('/articles/destroy/{id}', 'destroy')->name('articles.destroy');
+        Route::post('/articles/promoted/{id}', 'promoted')->name('articles.promoted');
     });
 
 });

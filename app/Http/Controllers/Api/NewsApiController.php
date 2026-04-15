@@ -74,7 +74,14 @@ class NewsApiController extends Controller
     {
         $slug = $request->query('slug');
 
-        $news = NewsCategory::with('news')->where('slug', $slug)->first();
+        $news = NewsCategory::with('news')->where('slug', $slug)->get();
+
+        return $this->successResponse($news, 'News category details retrieved successfully');
+    }
+
+    public function newsCategoryDetailsById($id)
+    {
+        $news = NewsCategory::with('news')->where('id', $id)->first();
 
         return $this->successResponse($news, 'News category details retrieved successfully');
     }
