@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\NewsLetterController;
 use App\Http\Controllers\Api\SupportApiController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ExclusiveOfferController;
 use App\Http\Controllers\HitPayController;
@@ -159,6 +160,7 @@ Route::get('/platform', [PlatformController::class, 'show']);
 Route::get('/careers', [CareerController::class, 'show']);
 Route::get('/about-contact', [AboutContactController::class, 'show']);
 Route::get('/about-landing-page', [HomeController::class, 'landingPage']);
+Route::get('/contact', [ContactController::class, 'contact']);
 
 Route::controller(SupportApiController::class)->group(function () {
     Route::get('/supports-landing-page', 'index');

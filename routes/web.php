@@ -13,6 +13,7 @@ use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CmsController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DirectTopUpController;
 use App\Http\Controllers\EmployeeBenefitController;
@@ -353,6 +354,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/articles/update/{id}', 'update')->name('articles.update');
         Route::delete('/articles/destroy/{id}', 'destroy')->name('articles.destroy');
         Route::post('/articles/promoted/{id}', 'promoted')->name('articles.promoted');
+    });
+
+    Route::controller(ContactController::class)->group(function () {
+        Route::get('/contacts', 'index')->name('contacts.index');
+        Route::get('/contacts/edit', 'edit')->name('contacts.edit');
+        Route::post('/contacts/update', 'update')->name('contacts.update');
+        Route::post('/contacts/numbers/update', 'updateNumbers')->name('contacts.update.number');
     });
 
 });

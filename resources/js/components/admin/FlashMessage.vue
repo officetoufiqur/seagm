@@ -28,7 +28,7 @@ watch(
 <template>
   <div
     v-if="visible"
-    class="flex fixed top-5 right-10 items-center w-full max-w-xs p-4 mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded"
+    class="flex fixed top-5 right-10 items-center w-full max-w-xs p-4 mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50"
   >
     <BadgeCheckIcon class="w-6 h-6" />
     <div class="ms-3 text-sm font-normal">{{ message }}</div>

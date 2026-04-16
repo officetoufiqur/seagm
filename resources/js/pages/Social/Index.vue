@@ -74,7 +74,7 @@ function deletesocials(id: number) {
                 create-url="/socials/create">
 
                 <template #icon="{ item }">
-                    <span v-html="item.icon"></span>
+                    <p v-html="item.icon" class="w-10 h-10"></p>
                 </template>
 
                 <template #action="{ item }">

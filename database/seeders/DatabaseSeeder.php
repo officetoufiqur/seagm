@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             AdvantageSeeder::class,
             MilestoneSeeder::class,
             BrandSeeder::class,
-            GuideCategorySeeder::class
+            GuideCategorySeeder::class,
+            ContactSeeder::class
         ]);
 
     }
