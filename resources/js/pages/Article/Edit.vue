@@ -9,7 +9,6 @@ import { onMounted, nextTick } from 'vue';
 import 'dropify/dist/css/dropify.min.css';
 import $ from 'jquery';
 import 'dropify';
-import Textarea from '@/components/admin/Textarea.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -153,8 +152,8 @@ onMounted(() => {
                             </div>
 
                             <div>
-                                <Textarea label="Content" v-model="form.content"
-                                    placeholder="Write article content..." :rows="5" />
+                                 <QuillEditor v-model:content="form.content" contentType="html" theme="snow"
+                                    class="mt-4" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.content">
                                     {{ form.errors.content }}
                                 </span>
@@ -177,8 +176,8 @@ onMounted(() => {
                             <thead class="bg-gray-100 text-left text-sm">
                                 <tr>
                                     <th class="p-2 border">Step Description</th>
-                                    <th class="p-2 border">Image (Optional)</th>
-                                    <th class="p-2 border text-center">Action</th>
+                                    <th class="p-2 border w-70">Image (Optional)</th>
+                                    <th class="p-2 border text-center w-30">Action</th>
                                 </tr>
                             </thead>
 

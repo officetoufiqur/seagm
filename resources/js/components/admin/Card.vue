@@ -6,7 +6,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="relative rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+  <div class="relative rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white dark:bg-sidebar">
     <div class="flex h-[10rem] w-full items-center justify-center gap-5">
       <div class="icon bg-blue-400 px-4 py-4 text-white rounded-md">
         <slot name="icon" />

@@ -37,18 +37,18 @@ const data = [
                 <Card title="Comments" value="0" />
             </div>
             <div class="flex items-center justify-center space-x-4 px-4">
-                <div class="w-full h-[44vh] rounded-xl border border-sidebar-border/70 p-5">
+                <div class="w-full h-[44vh] rounded-xl border border-sidebar-border/70 p-5 bg-white dark:bg-sidebar">
                     <BarChart />
                 </div>
-                <div class="w-full h-[44vh] rounded-xl border border-sidebar-border/70 p-5">
+                <div class="w-full h-[44vh] rounded-xl border border-sidebar-border/70 p-5 bg-white dark:bg-sidebar">
                     <LineChart />
                 </div>
             </div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-3 space-x-4 px-4">
-                <div class="col-span-2 w-full h-[42vh] rounded-xl border border-sidebar-border/70 p-5">
+                <div class="col-span-2 w-full h-[42vh] rounded-xl border border-sidebar-border/70 p-5 bg-white dark:bg-sidebar">
                     <Table :rows="data" :columns="column" :title="`Active Users`" />
                 </div>
-                <div class="w-full h-[42vh] rounded-xl border border-sidebar-border/70 p-5">
+                <div class="w-full h-[42vh] rounded-xl border border-sidebar-border/70 p-5 bg-white dark:bg-sidebar">
                     <div class="">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Performing User</h3>
                         <div class="space-y-4">

@@ -45,6 +45,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/register', function () {
+    return redirect('/login');
+});
+
 Route::get('/dump-autoload', function () {
     exec('composer dump-autoload');
 

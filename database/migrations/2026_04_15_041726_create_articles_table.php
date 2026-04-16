@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sub_category_id')->constrained()->cascadeOnDelete();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->longText('content');
             $table->integer('views')->default(0);
             $table->boolean('is_promoted')->default(false);
+            $table->dateTime('viewed_at')->nullable();
             $table->timestamps();
         });
     }

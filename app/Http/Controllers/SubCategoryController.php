@@ -29,9 +29,12 @@ class SubCategoryController extends Controller
             'name' => 'required',
         ]);
 
+        $slug = str_replace(' ', '-', strtolower($request->name));
+
         SubCategory::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
+            'slug' => $slug,
         ]);
 
         return redirect()->route('sub-categories.index')->with('message', 'Sub Category created successfully.');
@@ -54,9 +57,12 @@ class SubCategoryController extends Controller
 
         $sub_category = SubCategory::find($id);
 
+        $slug = str_replace(' ', '-', strtolower($request->name));
+
         $sub_category->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
+            'slug' => $slug,
         ]);
 
         return redirect()->route('sub-categories.index')->with('message', 'Sub Category updated successfully.');

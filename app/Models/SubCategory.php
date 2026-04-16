@@ -11,9 +11,10 @@ class SubCategory extends Model
     protected $fillable = [
         'name',
         'category_id',
+        'slug',
     ];
 
-    public function guidCategory()
+    public function category()
     {
         return $this->belongsTo(UserGuideCategory::class, 'category_id');
     }

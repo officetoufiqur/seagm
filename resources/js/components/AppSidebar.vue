@@ -184,8 +184,8 @@ const mainNavItems: NavItem[] = [
                                 <!-- <div class="flex aspect-square size-9 items-center justify-center rounded-md mt-3">
                                 <img class="w-14" src="/assets/images/fabicon.png" alt="icon">
                             </div> -->
-                                <div class="grid flex-1 text-left text-sm mt-4">
-                                    <img class="w-28" src="/assets/images/logo.png" alt="">
+                                <div class="grid flex-1 text-left text-sm mt-2">
+                                    <img class="w-28" src="/assets/images/logo.jpg" alt="">
                                 </div>
                             </div>
                         </Link>

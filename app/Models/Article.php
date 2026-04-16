@@ -11,6 +11,7 @@ class Article extends Model
     protected $fillable = [
         'sub_category_id',
         'title',
+        'slug',
         'content',
         'views',
         'is_promoted',

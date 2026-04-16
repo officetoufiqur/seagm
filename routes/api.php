@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\NewsLetterController;
+use App\Http\Controllers\Api\SupportApiController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CouponController;
@@ -159,7 +160,14 @@ Route::get('/careers', [CareerController::class, 'show']);
 Route::get('/about-contact', [AboutContactController::class, 'show']);
 Route::get('/about-landing-page', [HomeController::class, 'landingPage']);
 
+Route::controller(SupportApiController::class)->group(function () {
+    Route::get('/supports-landing-page', 'index');
+    Route::get('/supports-sub-category', 'subCategory');
+    Route::get('/sub-category-details/{id}', 'subCategoryDetails');
+    Route::get('/article-details/{id}', 'articleDetails');
+    Route::get('/supports-search', 'search');
+});
+
 Route::controller(ArticleFeedbackController::class)->group(function () {
-    Route::get('/articles/{id}/feedback', 'index');
     Route::post('/articles/{id}/feedback', 'store');
 });

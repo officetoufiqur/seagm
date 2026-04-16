@@ -39,9 +39,12 @@ class ArticleController extends Controller
             'items.*.image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
+        $slug = str_replace(' ', '-', strtolower($request->title));
+
         $article = Article::create([
             'sub_category_id' => $request->sub_category_id,
             'title' => $request->title,
+            'slug' => $slug,
             'content' => $request->content,
         ]);
 
@@ -86,9 +89,13 @@ class ArticleController extends Controller
         ]);
 
         $article = Article::findOrFail($id);
+
+        $slug = str_replace(' ', '-', strtolower($request->title));
+
         $article->update([
             'sub_category_id' => $request->sub_category_id,
             'title' => $request->title,
+            'slug' => $slug,
             'content' => $request->content,
         ]);
 

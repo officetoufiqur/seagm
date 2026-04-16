@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login } from '@/routes';
 import { Head, Link } from '@inertiajs/vue3';
 
 withDefaults(
@@ -38,10 +38,10 @@ withDefaults(
                             Log in
                         </Link>
 
-                        <Link v-if="canRegister" :href="register()"
+                        <!-- <Link v-if="canRegister" :href="register()"
                             class="rounded-sm border px-5 py-1.5 text-sm hover:border-gray-400 text-white font-medium">
                             Register
-                        </Link>
+                        </Link> -->
                     </template>
                 </nav>
             </header>
