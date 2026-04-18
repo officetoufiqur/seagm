@@ -29,7 +29,9 @@ class DatabaseSeeder extends Seeder
             MilestoneSeeder::class,
             BrandSeeder::class,
             GuideCategorySeeder::class,
-            ContactSeeder::class
+            ContactSeeder::class,
+            StarSeeder::class,
+            StarAboutSeeder::class
         ]);
 
     }

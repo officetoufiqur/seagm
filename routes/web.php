@@ -11,6 +11,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardItemController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\CmsController;
 use App\Http\Controllers\ContactController;
@@ -30,6 +31,10 @@ use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SkrillController;
 use App\Http\Controllers\SocialController;
+use App\Http\Controllers\StarAboutController;
+use App\Http\Controllers\StarCategoryController;
+use App\Http\Controllers\StarController;
+use App\Http\Controllers\StarRewardController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TermsController;
@@ -361,6 +366,48 @@ Route::middleware('auth')->group(function () {
         Route::get('/contacts/edit', 'edit')->name('contacts.edit');
         Route::post('/contacts/update', 'update')->name('contacts.update');
         Route::post('/contacts/numbers/update', 'updateNumbers')->name('contacts.update.number');
+    });
+
+    Route::controller(StarController::class)->group(function () {
+        Route::get('/star-banner', 'index')->name('star.index');
+        Route::get('/star-banner/edit', 'edit')->name('star.edit');
+        Route::post('/star-banner/update', 'update')->name('star.update');
+    });
+
+    Route::controller(StarAboutController::class)->group(function () {
+        Route::get('/star-abouts', 'index')->name('star-abouts.index');
+        Route::get('/star-abouts/create', 'create')->name('star-abouts.create');
+        Route::post('/star-abouts/store', 'store')->name('star-abouts.store');
+        Route::get('/star-abouts/edit/{id}', 'edit')->name('star-abouts.edit');
+        Route::post('/star-abouts/update/{id}', 'update')->name('star-abouts.update');
+        Route::delete('/star-abouts/destroy/{id}', 'destroy')->name('star-abouts.destroy');
+    });
+
+    Route::controller(CarouselController::class)->group(function () {
+        Route::get('/carousels', 'index')->name('carousels.index');
+        Route::get('/carousels/create', 'create')->name('carousels.create');
+        Route::post('/carousels/store', 'store')->name('carousels.store');
+        Route::get('/carousels/edit/{id}', 'edit')->name('carousels.edit');
+        Route::post('/carousels/update/{id}', 'update')->name('carousels.update');
+        Route::delete('/carousels/destroy/{id}', 'destroy')->name('carousels.destroy');
+    });
+
+    Route::controller(StarCategoryController::class)->group(function () {
+        Route::get('/star-category', 'index')->name('star-category.index');
+        Route::get('/star-category/create', 'create')->name('star-category.create');
+        Route::post('/star-category/store', 'store')->name('star-category.store');
+        Route::get('/star-category/edit/{id}', 'edit')->name('star-category.edit');
+        Route::post('/star-category/update/{id}', 'update')->name('star-category.update');
+        Route::delete('/star-category/destroy/{id}', 'destroy')->name('star-category.destroy');
+    });
+
+     Route::controller(StarRewardController::class)->group(function () {
+        Route::get('/star-rewards', 'index')->name('star-rewards.index');
+        Route::get('/star-rewards/create', 'create')->name('star-rewards.create');
+        Route::post('/star-rewards/store', 'store')->name('star-rewards.store');
+        Route::get('/star-rewards/edit/{id}', 'edit')->name('star-rewards.edit');
+        Route::post('/star-rewards/update/{id}', 'update')->name('star-rewards.update');
+        Route::delete('/star-rewards/destroy/{id}', 'destroy')->name('star-rewards.destroy');
     });
 
 });

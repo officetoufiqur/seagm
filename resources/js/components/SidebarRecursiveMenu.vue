@@ -45,7 +45,7 @@ watchEffect(() => {
         class="flex justify-between cursor-pointer items-center w-full"
       >
         <div class="flex items-center gap-2">
-          <component :is="item.icon" class="w-5 h-5" />
+          <component :is="item.icon" class="w-4 h-4" />
           <span class="text-[16px]">{{ item.title }}</span>
         </div>
         <ChevronRightIcon

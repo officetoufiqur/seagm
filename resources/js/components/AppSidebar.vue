@@ -3,7 +3,7 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BadgePercentIcon, ConstructionIcon, HandshakeIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon, SquareUserRoundIcon } from 'lucide-vue-next';
+import { BadgePercentIcon, ConstructionIcon, HandshakeIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon, SquareUserRoundIcon, StarIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
@@ -170,6 +170,32 @@ const mainNavItems: NavItem[] = [
         title: 'Contacts',
         href: '/contacts',
         icon: SquareUserRoundIcon
+    },
+    {
+        title: 'Star',
+        icon: StarIcon,
+        subMenu: [
+            {
+                title: 'Banner',
+                href: '/star-banner',
+            },
+            {
+                title: 'Cards',
+                href: '/star-abouts',
+            },
+            {
+                title: 'Carousels',
+                href: '/carousels',
+            },
+            {
+                title: 'Category',
+                href: '/star-category',
+            },
+            {
+                title: 'Products',
+                href: '/star-rewards',
+            }
+        ]
     }
 
 

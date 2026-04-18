@@ -18,15 +18,25 @@ class SupportApiController extends Controller
     {
         $category = UserGuideCategory::all();
 
-        $promotedArticles = Article::where('is_promoted', 1)->get();
+        $promotedArticles = Article::with([
+            'subCategory:id,category_id,name',
+            'subCategory.category:id,name',
+        ])->where('is_promoted', 1)->get();
 
         $recentArticles = UserGuideCategory::where('name', 'Cards')
             ->with('subCategories.articles')
             ->first();
 
         $recentDescription = $recentArticles->subCategories
-            ->flatMap(function ($sub) {
-                return $sub->articles;
+            ->flatMap(function ($sub) use ($recentArticles) {
+                return $sub->articles->map(function ($article) use ($recentArticles) {
+                    $article->category = [
+                        'id' => $recentArticles->id,
+                        'name' => $recentArticles->name,
+                    ];
+
+                    return $article;
+                });
             })
             ->sortByDesc('created_at')
             ->take(6)
@@ -57,19 +67,19 @@ class SupportApiController extends Controller
 
     public function subCategoryDetails($id)
     {
-        $subCategory = SubCategory::select('id', 'name')->where('id', $id)
-            ->with('articles')->first();
-
-        if (! $subCategory) {
-            return $this->errorResponse('Sub category not found.', 404);
-        }
+        $subCategory = SubCategory::select('id', 'name', 'category_id')->where('id', $id)
+            ->with('articles', 'category:id,name')->first();
 
         return $this->successResponse($subCategory, 'Sub category fetched successfully.');
     }
 
-    public function articleDetails($id)
+    public function articleDetails(Request $request, $id)
     {
-        $article = Article::with('steps')->find($id);
+        $article = Article::with([
+            'subCategory:id,category_id,name',
+            'subCategory.category:id,name',
+            'steps',
+        ])->find($id);
 
         $helpful_count = ArticleFeedback::where('article_id', $id)
             ->where('is_helpful', true)
@@ -78,21 +88,32 @@ class SupportApiController extends Controller
         $total_feedback = ArticleFeedback::where('article_id', $id)
             ->count();
 
+        $userFeedback = ArticleFeedback::select('id', 'is_helpful')->where('article_id', $id)
+            ->where('ip_address', $request->ip())
+            ->first();
+
         $article->viewed_at = now();
         $article->save();
 
-        $relatedArticles = Article::where('sub_category_id', $article->sub_category_id)
+        $relatedArticles = Article::with([
+            'subCategory:id,category_id,name',
+            'subCategory.category:id,name',
+        ])->where('sub_category_id', $article->sub_category_id)
             ->where('id', '!=', $article->id)
             ->select('id', 'title')
             ->latest()
             ->limit(6)
             ->get();
 
-        $recentArticles = Article::orderBy('viewed_at', 'desc')->limit(6)->get();
+        $recentArticles = Article::with([
+            'subCategory:id,category_id,name',
+            'subCategory.category:id,name',
+        ])->select('id', 'sub_category_id', 'title')->orderBy('viewed_at', 'desc')->limit(6)->get();
 
         return $this->successResponse([
             'helpful_count' => $helpful_count,
             'total_feedback' => $total_feedback,
+            'userFeedback' => $userFeedback,
             'article' => $article,
             'relatedArticles' => $relatedArticles,
             'recentArticles' => $recentArticles,
@@ -109,16 +130,19 @@ class SupportApiController extends Controller
             ], 400);
         }
 
-        $articles = Article::where(function ($qBuilder) use ($query) {
-                $qBuilder->where('title', 'LIKE', "%{$query}%")
-                    ->orWhere('content', 'LIKE', "%{$query}%")
-                    ->orWhereHas('subCategory', function ($q) use ($query) {
-                        $q->where('name', 'LIKE', "%{$query}%");
-                    })
-                    ->orWhereHas('subCategory.category', function ($q) use ($query) {
-                        $q->where('name', 'LIKE', "%{$query}%");
-                    });
-            })
+        $articles = Article::with([
+            'subCategory:id,category_id,name',
+            'subCategory.category:id,name',
+        ])->where(function ($qBuilder) use ($query) {
+            $qBuilder->where('title', 'LIKE', "%{$query}%")
+                ->orWhere('content', 'LIKE', "%{$query}%")
+                ->orWhereHas('subCategory', function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "%{$query}%");
+                })
+                ->orWhereHas('subCategory.category', function ($q) use ($query) {
+                    $q->where('name', 'LIKE', "%{$query}%");
+                });
+        })
             ->latest()
             ->paginate(10);
 

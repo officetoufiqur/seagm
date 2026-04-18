@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\HomeApiController;
 use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\NewsLetterController;
+use App\Http\Controllers\Api\StarApiController;
 use App\Http\Controllers\Api\SupportApiController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CareerController;
@@ -161,6 +162,7 @@ Route::get('/careers', [CareerController::class, 'show']);
 Route::get('/about-contact', [AboutContactController::class, 'show']);
 Route::get('/about-landing-page', [HomeController::class, 'landingPage']);
 Route::get('/contact', [ContactController::class, 'contact']);
+Route::get('/star', [StarApiController::class, 'index']);
 
 Route::controller(SupportApiController::class)->group(function () {
     Route::get('/supports-landing-page', 'index');
