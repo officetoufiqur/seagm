@@ -86,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/direct-top-up/{id}/reviews', 'store');
     });
 
-    Route::post('/hitpay/payment', [HitPayController::class, 'hitpay']);
+    Route::post('/hitpay/payment', [HitPayController::class, 'hitpayCheckout']);
 
     Route::controller(UserProfileController::class)->group(function () {
         Route::get('/profile', 'show');
