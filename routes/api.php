@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\NewsApiController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\NewsLetterController;
 use App\Http\Controllers\Api\StarApiController;
+use App\Http\Controllers\Api\StarProductController;
 use App\Http\Controllers\Api\SupportApiController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CareerController;
@@ -122,6 +123,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/carts', 'index');
         Route::post('/carts/{id}', 'store');
     });
+
+    Route::controller(StarProductController::class)->group(function () {
+        Route::get('/star-products', 'index');
+        Route::get('/star-products/{id}', 'show');
+    });
+
+    
 });
 
 // Route::get('/invoices/download', [DashboardController::class, 'downloadInvoice']);

@@ -10,39 +10,44 @@ import 'dropify/dist/css/dropify.min.css';
 import $ from 'jquery';
 import 'dropify';
 import Label from '@/components/admin/Label.vue';
-import Textarea from '@/components/admin/Textarea.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Star abouts List',
-        href: '/star-abouts',
+        title: 'Star rewards List',
+        href: '/star-rewards',
     },
 ];
 
-type About = {
-    id: number
-    section: string
-    title: string
-    subtitle: string
-    description: string
-    image: null | string
-}
-
 const props = defineProps<{
-    about: About;
+    reward: {
+        id: number;
+        star_category_id: number;
+        title: string;
+        subtitle: string;
+        coupon: number;
+        reward: number;
+        description: string;
+        image: string;
+    }
+    categories: {
+        id: number;
+        name: string;
+    }[];
 }>()
 
 const form = useForm({
-    section: props.about.section,
-    title: props.about.title,
-    subtitle: props.about.subtitle,
-    description: props.about.description,
+    star_category_id: props.reward.star_category_id,
+    title: props.reward.title,
+    subtitle: props.reward.subtitle,
+    coupon: props.reward.coupon,
+    reward: props.reward.reward,
+    description: props.reward.description,
     image: null as File | null,
 });
 
 
 const submit = () => {
-    form.post('/star-abouts/update/' + props.about.id, {
+    form.post('/star-rewards/update/' + props.reward.id, {
         onSuccess: () => {
             form.reset();
         }
@@ -58,8 +63,8 @@ const image = (e: Event) => {
 
 onMounted(() => {
     $('#image').dropify({
-        defaultFile: props.about.image,
-        height: 110,
+        height: 150,
+        defaultFile: props.reward.image,
         messages: {
             default: 'Drag and drop a file here or click',
             replace: 'Drag and drop or click to replace',
@@ -73,15 +78,15 @@ onMounted(() => {
 
 <template>
 
-    <Head title="Star abouts" />
+    <Head title="Star rewards" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="bg-white m-7 p-5 rounded">
 
             <!-- Header -->
             <div class="flex items-center justify-between border-b pb-3">
-                <h1 class="text-xl font-medium">Star abouts Update</h1>
-                <LinkButton label="Back" url="/star-abouts" />
+                <h1 class="text-xl font-medium">Star rewards update</h1>
+                <LinkButton label="Back" url="/star-rewards" />
             </div>
 
             <div class="p-5">
@@ -91,13 +96,16 @@ onMounted(() => {
                     <div class="mb-3 space-y-4">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <Label label="Section" />
-                                <select v-model="form.section"
+                                <Label label="Star Category" />
+                                <select v-model="form.star_category_id"
                                     class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm">
                                     <option value="">Select Section</option>
-                                    <option value="about">About</option>
-                                    <option value="cards">Cards</option>
+                                    <option v-for="category in categories" :value="category.id" :key="category.id">{{
+                                        category.name }}</option>
                                 </select>
+                                <span class="text-red-500 text-sm" v-if="form.errors.star_category_id">
+                                    {{ form.errors.star_category_id }}
+                                </span>
                             </div>
                             <div>
                                 <InputLabel label="Title" v-model="form.title" type="text" />
@@ -113,8 +121,24 @@ onMounted(() => {
                                 </span>
                             </div>
 
-                            <div>
-                                <Textarea v-model="form.description" :rows="5" :label="`Description`" />
+                            <div class="">
+                                <InputLabel label="Coupon" v-model="form.coupon" type="number" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.coupon">
+                                    {{ form.errors.coupon }}
+                                </span>
+                            </div>
+
+                            <div class="">
+                                <InputLabel label="Reward" v-model="form.reward" type="number" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.reward">
+                                    {{ form.errors.reward }}
+                                </span>
+                            </div>
+
+                            <div class="h-30">
+                                <label class="text-sm font-medium">Description</label>
+                                <QuillEditor v-model:content="form.description" contentType="html" theme="snow"
+                                    class="mt-4" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.description">
                                     {{ form.errors.description }}
                                 </span>
@@ -124,7 +148,7 @@ onMounted(() => {
                                 <Label :label="'Image'" />
                                 <input type="file" id="image" class="dropify" @change="image">
                                 <span class="text-red-500 text-sm" v-if="form.errors.image">{{ form.errors.image
-                                }}</span>
+                                    }}</span>
                             </div>
 
                         </div>
