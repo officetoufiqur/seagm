@@ -18,7 +18,7 @@ class StarProductController extends Controller
 
         $categories = StarCategory::withCount('rewards')->get();
 
-        $rewards = StarReward::with('starCategory')
+        $rewards = StarReward::with('starCategory')->select('id', 'star_category_id', 'title', 'subtitle', 'coupon', 'reward', 'image')
             ->when($filter, function ($query) use ($filter) {
                 $query->whereHas('starCategory', function ($q) use ($filter) {
                     $q->where('slug', $filter);

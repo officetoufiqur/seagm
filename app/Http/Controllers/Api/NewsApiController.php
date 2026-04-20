@@ -24,7 +24,7 @@ class NewsApiController extends Controller
 
         $data = [
             'banners' => $banners,
-            'latest_news' => News::latest()->take(5)->get(),
+            'latest_news' => News::with('author:id,name,image')->latest()->take(5)->get(),
 
             'promotions' => $newsHelper->get('promotions', 5),
             'top_up_guides' => $newsHelper->get('top-up-guides', 6),
@@ -74,14 +74,15 @@ class NewsApiController extends Controller
     {
         $slug = $request->query('slug');
 
-        $news = NewsCategory::with('news')->where('slug', $slug)->get();
+        $news = NewsCategory::with('news.author:id,name')->where('slug', $slug)->get();
 
         return $this->successResponse($news, 'News category details retrieved successfully');
     }
 
     public function newsCategoryDetailsById($id)
     {
-        $news = NewsCategory::with('news')->where('id', $id)->first();
+        $news = News::with(['author:id,name,image', 'category:id,name,slug'])->where('id', $id)->first();
+   
 
         return $this->successResponse($news, 'News category details retrieved successfully');
     }
