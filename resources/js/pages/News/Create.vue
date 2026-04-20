@@ -5,6 +5,8 @@ import LinkButton from '@/components/admin/LinkButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 import { onMounted } from 'vue';
 import 'dropify/dist/css/dropify.min.css';
 import $ from 'jquery';
@@ -26,6 +28,7 @@ const props = defineProps<{
 
 const form = useForm({
     category_id: '',
+    tags: [],
     title: '',
     content: '',
     image: null as File | null,
@@ -59,6 +62,7 @@ const mainDropify = () => {
     });
 };
 
+
 onMounted(() => {
     mainDropify();
 });
@@ -85,10 +89,13 @@ onMounted(() => {
                     <div class="mb-3 space-y-4">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="category_id" class="text-[#5D5D5D] font-medium text-sm">Select Category</label>
-                               <select name="category_id" id="category_id" v-model="form.category_id" class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm">
+                                <label for="category_id" class="text-[#5D5D5D] font-medium text-sm">Select
+                                    Category</label>
+                                <select name="category_id" id="category_id" v-model="form.category_id"
+                                    class="border border-gray-300 rounded px-3 py-2 w-full mt-1 text-sm">
                                     <option value="">Select Category</option>
-                                    <option v-for="category in props.categories" :value="category.id" :key="category.id">
+                                    <option v-for="category in props.categories" :value="category.id"
+                                        :key="category.id">
                                         {{ category.name }}
                                     </option>
                                 </select>
@@ -96,15 +103,27 @@ onMounted(() => {
                                     {{ form.errors.category_id }}
                                 </span>
                             </div>
+
+                            <div>
+                                <label for="category_id" class="text-[#5D5D5D] font-medium text-sm">Select
+                                    Tags</label>
+                                <Multiselect v-model="form.tags" :options="props.categories" :multiple="true"
+                                    label="name" track-by="id" placeholder="Select categories" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.category_id">
+                                    {{ form.errors.category_id }}
+                                </span>
+                            </div>
+
                             <div>
                                 <InputLabel label="Title" v-model="form.title" type="text" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.title">
                                     {{ form.errors.title }}
                                 </span>
                             </div>
-                            
+
                             <div class="h-30">
-                                <label for="content" class="text-[#5D5D5D] font-medium text-sm">Terms & Conditions</label>
+                                <label for="content" class="text-[#5D5D5D] font-medium text-sm">Terms &
+                                    Conditions</label>
                                 <QuillEditor v-model:content="form.content" contentType="html" theme="snow"
                                     class="mt-4" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.content">
@@ -112,12 +131,12 @@ onMounted(() => {
                                 </span>
                             </div>
                             <div>
-                                    <label for="image" class="text-[#5D5D5D] font-medium text-sm">Image</label>
-                                    <input type="file" id="image" class="mainImage" @change="mainImage" />
-                                    <span class="text-red-500 text-sm" v-if="form.errors.image">
-                                        {{ form.errors.image }}
-                                    </span>
-                                </div>
+                                <label for="image" class="text-[#5D5D5D] font-medium text-sm">Image</label>
+                                <input type="file" id="image" class="mainImage" @change="mainImage" />
+                                <span class="text-red-500 text-sm" v-if="form.errors.image">
+                                    {{ form.errors.image }}
+                                </span>
+                            </div>
                         </div>
                     </div>
 

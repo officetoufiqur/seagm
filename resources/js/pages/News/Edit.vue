@@ -5,6 +5,8 @@ import LinkButton from '@/components/admin/LinkButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 import { onMounted } from 'vue';
 import 'dropify/dist/css/dropify.min.css';
 import $ from 'jquery';
@@ -28,6 +30,7 @@ const props = defineProps<{
         title: string;
         content: string;
         image: string;
+        tags: string[];
     };
 }>()
 
@@ -35,6 +38,7 @@ const form = useForm({
     category_id: props.news.category_id,
     title: props.news.title,
     content: props.news.content,
+    tags: props.news.tags,
     image: null as File | null,
 });
 
@@ -100,6 +104,15 @@ onMounted(() => {
                                         {{ category.name }}
                                     </option>
                                 </select>
+                                <span class="text-red-500 text-sm" v-if="form.errors.category_id">
+                                    {{ form.errors.category_id }}
+                                </span>
+                            </div>
+                            <div>
+                                <label for="category_id" class="text-[#5D5D5D] font-medium text-sm">Select
+                                    Tags</label>
+                                <Multiselect v-model="form.tags" :options="props.categories" :multiple="true"
+                                    label="name" track-by="id" placeholder="Select categories" />
                                 <span class="text-red-500 text-sm" v-if="form.errors.category_id">
                                     {{ form.errors.category_id }}
                                 </span>

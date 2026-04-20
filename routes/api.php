@@ -161,6 +161,7 @@ Route::controller(NewsApiController::class)->group(function () {
     Route::get('/guide/category', 'guideCategory');
     Route::get('/news/category/details', 'newsCategoryDetails');
     Route::get('/news/category/details/{id}', 'newsCategoryDetailsById');
+    Route::post('/news/comments/{id}', 'newsComments');
 });
 
 Route::post('/newsletter', [NewsLetterController::class, 'store']);

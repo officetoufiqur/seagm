@@ -36,6 +36,7 @@ class NewsController extends Controller
             'category_id' => 'required|exists:news_categories,id',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'tags' => 'nullable|array',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
@@ -55,6 +56,7 @@ class NewsController extends Controller
         $news->content = $request->content;
         $news->image = $file;
         $news->published_at = now();
+        $news->tags = $request->tags;
 
         $news->save();
 
@@ -77,6 +79,7 @@ class NewsController extends Controller
             'category_id' => 'required|exists:news_categories,id',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'tags' => 'nullable|array',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
@@ -95,6 +98,7 @@ class NewsController extends Controller
         $news->title = $request->title;
         $news->slug = $slug;
         $news->content = $request->content;
+        $news->tags = $request->tags;
 
         $news->save();
 

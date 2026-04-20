@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsBanner;
 use App\Models\NewsCategory;
+use App\Models\NewsComment;
 use App\Models\NewsVideo;
 use App\Trait\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NewsApiController extends Controller
 {
@@ -64,7 +66,7 @@ class NewsApiController extends Controller
         $news = NewsCategory::whereIn('slug', [
             'game-guides',
             'game-reviews',
-            'tech-reviews'
+            'tech-reviews',
         ])->get();
 
         return $this->successResponse($news, 'Gaming news retrieved successfully');
@@ -81,9 +83,57 @@ class NewsApiController extends Controller
 
     public function newsCategoryDetailsById($id)
     {
-        $news = News::with(['author:id,name,image', 'category:id,name,slug'])->where('id', $id)->first();
-   
+        $news = News::with(['author:id,name,image', 'category:id,name,slug'])
+            ->where('id', $id)
+            ->first();
 
-        return $this->successResponse($news, 'News category details retrieved successfully');
+        $previous = News::select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('id', '<', $news->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $next = News::select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('id', '>', $news->id)
+            ->orderBy('id', 'asc')
+            ->first();
+
+
+        $related = News::select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('category_id', $news->category_id)
+            ->where('id', '!=', $news->id)
+            ->take(3)
+            ->get();
+
+        $mayAlsoLike = News::select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('category_id', $news->category_id)
+            ->where('id', '!=', $news->id)
+            ->get();
+
+        $data = [
+            'news' => $news,
+            'related' => $related,
+            'previous' => $previous,
+            'next' => $next,
+            'mayAlsoLike' => $mayAlsoLike
+        ];
+
+        return $this->successResponse($data, 'News category details retrieved successfully');
+    }
+
+    public function newsComments(Request $request, $id)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        $news = News::findOrFail($id);
+        $user = Auth::user();
+
+        $comment = NewsComment::create([
+            'news_id' => $news->id,
+            'user_id' => $user->id ?? 1,
+            'comment' => $request->comment,
+        ]);
+
+        $news->increment('comments');
+
+        return $this->successResponse($comment, 'News comment created successfully');
+
     }
 }

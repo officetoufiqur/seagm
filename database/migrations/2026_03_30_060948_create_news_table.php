@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('published_at');
             $table->boolean('status')->default(true);
             $table->integer('comments')->default(0);
+            $table->json('tags')->nullable();
             $table->timestamps();
         });
     }

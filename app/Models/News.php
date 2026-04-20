@@ -18,11 +18,13 @@ class News extends Model
         'published_at',
         'status',
         'comments',
+        'tags',
     ];
 
     protected $casts = [
         'published_at' => 'date',
         'status' => 'boolean',
+        'tags' => 'array',
     ];
 
     public function category()
@@ -38,5 +40,10 @@ class News extends Model
     public function newsBanners()
     {
         return $this->hasMany(NewsBanner::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(NewsComment::class);
     }
 }
