@@ -82,7 +82,7 @@ Route::get('/run-schedule', function () {
 
 Route::get('/storage-link', function () {
     $target = storage_path('app/public');
-    $link = '/home/dwbcdckj/damac.dwbc-bh.com/storage';
+    $link = '/home/nayon/seagm.testorbis.com/storage';
 
     if (file_exists($link)) {
         return 'Symlink already exists.';

@@ -96,7 +96,7 @@ class NewsApiController extends Controller
             ->first();
 
 
-        $related = News::select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('category_id', $news->category_id)
+        $related = News::with('category')->select('id', 'category_id', 'title', 'slug', 'image', 'published_at')->where('category_id', $news->category_id)
             ->where('id', '!=', $news->id)
             ->take(3)
             ->get();
