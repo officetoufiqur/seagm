@@ -5,7 +5,7 @@ import { Head } from '@inertiajs/vue3';
 import BarChart from '@/components/admin/BarChart.vue';
 import LineChart from '@/components/admin/LineChart.vue';
 import Table from '@/components/admin/Table.vue';
-import { Building2Icon } from 'lucide-vue-next';
+import { Building2Icon, UsersRoundIcon } from 'lucide-vue-next';
 import Card from '@/components/admin/Card.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -14,6 +14,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const props = defineProps<{
+    users: number
+}>();
 
 const column = [
     { label: 'Name', key: 'name' },
@@ -32,7 +36,11 @@ const data = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3 px-4">
-                <Card title="Users" value="0" />
+                <Card title="Total Users" :value="props.users" >
+                    <template #icon>
+                        <UsersRoundIcon class="w-6 h-6" />
+                    </template>
+                </Card>
                 <Card title="Posts" value="0" />
                 <Card title="Comments" value="0" />
             </div>

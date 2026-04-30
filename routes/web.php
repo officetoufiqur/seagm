@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutContactController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdvantageController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\MobileRechargeController;
@@ -39,6 +40,7 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\ThroughController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGuideCategoryController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -70,19 +72,9 @@ Route::get('/clear-cache', function () {
     return 'Cache cleared successfully!';
 });
 
-Route::get('/run-schedule', function () {
-    Artisan::call('send:expires-reminder');
-    Artisan::call('send:check-medical-proof');
-    Artisan::call('app:task-overdue');
-    Artisan::call('company:renewal-status');
-    Artisan::call('app:installment');
-
-    return 'Schedule run successfully!';
-});
-
 Route::get('/storage-link', function () {
     $target = storage_path('app/public');
-    $link = '/home/nayon/seagm.testorbis.com/storage';
+    $link = public_path('storage');
 
     if (file_exists($link)) {
         return 'Symlink already exists.';
@@ -93,9 +85,9 @@ Route::get('/storage-link', function () {
     return 'Symlink created successfully.';
 });
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('paypal/payment/success', [PaypalController::class, 'paymentSuccess'])->name('paypal.payment.success');
 Route::get('paypal/payment/cancel', [PaypalController::class, 'paymentCancel'])->name('paypal.payment.cancel');
@@ -109,6 +101,15 @@ Route::get('/hitpay/success', [HitPayController::class, 'hitpaySuccess'])->name(
 
 Route::middleware('auth')->group(function () {
     Route::get('ckeditor', [CKEditorController::class, 'index']);
+
+    Route::controller(AdminDashboardController::class)->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/users', 'index')->name('users.index');
+        Route::delete('/users/{id}', 'destroy')->name('users.destroy');
+    });
 
     Route::controller(BannerController::class)->group(function () {
         Route::get('/banners', 'index')->name('banners.index');

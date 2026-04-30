@@ -3,13 +3,18 @@ import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BadgePercentIcon, ConstructionIcon, HandshakeIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon, SquareUserRoundIcon, StarIcon } from 'lucide-vue-next';
+import { BadgePercentIcon, ConstructionIcon, HandshakeIcon, LayoutGrid, MegaphoneIcon, NewspaperIcon, ScrollTextIcon, ShieldIcon, SquarePercentIcon, SquareUserRoundIcon, StarIcon, UserRound, UserRoundIcon } from 'lucide-vue-next';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Users',
+        href: '/users',
+        icon: UserRoundIcon,
     },
     {
         title: 'Banners',
